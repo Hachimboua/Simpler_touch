@@ -77,11 +77,16 @@ class MainWindow(QMainWindow):
         self.btn_skip_start = QPushButton("⏮")
         self.btn_play_pause = QPushButton("▶")
         self.btn_skip_end = QPushButton("⏭")
-        self.btn_loop = QPushButton("↺")
+        self.btn_loop = QPushButton("🔁")
         for btn in [self.btn_skip_start, self.btn_play_pause, self.btn_skip_end, self.btn_loop]:
             btn.setFlat(True)
-            btn.setFixedSize(28, 28)
+            btn.setFixedSize(36, 36)
+            btn.setCursor(Qt.CursorShape.PointingHandCursor)
         self.btn_loop.setCheckable(True)
+        self.btn_loop.setToolTip("Loop Playback")
+        self.btn_play_pause.setToolTip("Play/Pause (Space)")
+        self.btn_skip_start.setToolTip("Go to Start")
+        self.btn_skip_end.setToolTip("Go to End")
 
         self.btn_skip_start.clicked.connect(self._on_skip_start)
         self.btn_play_pause.clicked.connect(self._on_play_pause)
@@ -361,6 +366,7 @@ class MainWindow(QMainWindow):
         self._source_paused = False
         self._is_playing = True
         self.btn_play_pause.setText("⏸")
+        self.btn_play_pause.setToolTip("Pause (Space)")
 
         if source_type == "file" and self._current_file_source is not None:
             self._total_frames = max(0, int(self._current_file_source.get_total_frames()))
@@ -431,6 +437,7 @@ class MainWindow(QMainWindow):
         if self._is_playing:
             self._is_playing = False
             self.btn_play_pause.setText("▶")
+            self.btn_play_pause.setToolTip("Play (Space)")
             self._current_file_source.pause()
             self.capture_worker.pause()
             self._source_paused = True
@@ -438,6 +445,7 @@ class MainWindow(QMainWindow):
         else:
             self._is_playing = True
             self.btn_play_pause.setText("⏸")
+            self.btn_play_pause.setToolTip("Pause (Space)")
             self._current_file_source.resume()
             self.capture_worker.resume()
             self._source_paused = False

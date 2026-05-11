@@ -33,17 +33,28 @@ from param_store import ParamStore
 
 
 class SectionBox(QGroupBox):
-    def __init__(self, title: str) -> None:
-        super().__init__(title)
+    def __init__(self, title: str, icon: str = "") -> None:
+        display_title = f"{icon} {title}" if icon else title
+        super().__init__(display_title)
         self.setCheckable(True)
         self.setChecked(True)
         self.content = QWidget()
         self.layout_root = QVBoxLayout(self)
-        self.layout_root.setContentsMargins(6, 8, 6, 6)
+        self.layout_root.setContentsMargins(10, 15, 10, 10)
+        self.layout_root.setSpacing(8)
         self.layout_root.addWidget(self.content)
         self.inner_layout = QFormLayout(self.content)
         self.inner_layout.setContentsMargins(0, 0, 0, 0)
+        self.inner_layout.setSpacing(10)
+        self.inner_layout.setLabelAlignment(Qt.AlignmentFlag.AlignRight)
         self.toggled.connect(self.content.setVisible)
+        self.toggled.connect(self._on_toggled)
+
+    def _on_toggled(self, on: bool) -> None:
+        if on:
+            self.setStyleSheet("QGroupBox { background: #1e1e1e; }")
+        else:
+            self.setStyleSheet("QGroupBox { background: #181818; }")
 
 
 class ControlPanel(QDockWidget):
@@ -142,7 +153,7 @@ class ControlPanel(QDockWidget):
         combo.currentTextChanged.connect(lambda t: self.param_store.set(key, t))
 
     def _build_input_section(self) -> SectionBox:
-        section = SectionBox("Input")
+        section = SectionBox("Input", "📥")
 
         self.source_combo = QComboBox()
         self.source_combo.addItems(["webcam", "file"])
@@ -150,7 +161,8 @@ class ControlPanel(QDockWidget):
         self.source_combo.currentTextChanged.connect(lambda t: self.set_offline_render_available(t == "file"))
 
         self.file_path_edit = QLineEdit(str(self.param_store.get("input.source_path")))
-        browse_btn = QPushButton("Browse")
+        self.file_path_edit.setPlaceholderText("Path to video file...")
+        browse_btn = QPushButton("📁 Browse")
         browse_btn.clicked.connect(self._pick_file)
 
         file_row = QWidget()
@@ -191,7 +203,7 @@ class ControlPanel(QDockWidget):
         return section
 
     def _build_blob_section(self) -> SectionBox:
-        section = SectionBox("Blob")
+        section = SectionBox("Blob", "🫧")
 
         self.threshold_spin = QSpinBox()
         self.threshold_spin.setRange(0, 255)
@@ -230,7 +242,7 @@ class ControlPanel(QDockWidget):
         return section
 
     def _build_tracking_section(self) -> SectionBox:
-        section = SectionBox("Tracking")
+        section = SectionBox("Tracking", "🎯")
 
         self.trail_len_spin = QSpinBox()
         self.trail_len_spin.setRange(1, 500)
@@ -256,11 +268,19 @@ class ControlPanel(QDockWidget):
         return section
 
     def _make_color_button(self, key: str) -> QPushButton:
-        btn = QPushButton("Pick")
+        btn = QPushButton()
+        btn.setFixedWidth(60)
+        btn.setFixedHeight(24)
+        btn.setCursor(Qt.CursorShape.PointingHandCursor)
 
         def update_button() -> None:
             c = self.param_store.get(key)
-            btn.setStyleSheet("background-color: rgb({}, {}, {});".format(c[0], c[1], c[2]))
+            # Use border-radius and border for a nice swatch look
+            btn.setStyleSheet(
+                f"background-color: rgb({c[0]}, {c[1]}, {c[2]}); "
+                "border: 2px solid #333333; "
+                "border-radius: 4px;"
+            )
 
         def pick() -> None:
             current = self.param_store.get(key)
@@ -274,7 +294,7 @@ class ControlPanel(QDockWidget):
         return btn
 
     def _build_effects_section(self) -> SectionBox:
-        section = SectionBox("Effects")
+        section = SectionBox("Effects", "✨")
 
         self.bbox_enabled = QCheckBox("Bounding Box")
         self._bind_checkbox(self.bbox_enabled, "effects.bbox_enabled")
@@ -352,7 +372,7 @@ class ControlPanel(QDockWidget):
         return section
 
     def _build_creative_section(self) -> SectionBox:
-        section = SectionBox("Creative")
+        section = SectionBox("Creative", "🎨")
 
         self.creative_enabled = QCheckBox("Enable Creative FX")
         self._bind_checkbox(self.creative_enabled, "creative.enabled")
@@ -509,7 +529,7 @@ class ControlPanel(QDockWidget):
         return section
 
     def _build_frame_fx_section(self) -> SectionBox:
-        section = SectionBox("Frame FX")
+        section = SectionBox("Frame FX", "🎞️")
 
         self.frame_desaturate_spin = QDoubleSpinBox()
         self.frame_desaturate_spin.setRange(0.0, 1.0)
@@ -532,7 +552,7 @@ class ControlPanel(QDockWidget):
         return section
 
     def _build_overlay_style_section(self) -> SectionBox:
-        section = SectionBox("Overlay Style")
+        section = SectionBox("Overlay Style", "🖼️")
 
         self.overlay_corner_style_combo = QComboBox()
         self.overlay_corner_style_combo.addItem("full rect", "full")
@@ -600,7 +620,7 @@ class ControlPanel(QDockWidget):
         return section
 
     def _build_connection_lines_section(self) -> SectionBox:
-        section = SectionBox("Connection Lines")
+        section = SectionBox("Connection Lines", "🔗")
         section.setChecked(False)
 
         self.connection_enabled_cb = QCheckBox("Enable Connections")
@@ -682,7 +702,7 @@ class ControlPanel(QDockWidget):
         return section
 
     def _build_blob_interior_fx_section(self) -> SectionBox:
-        section = SectionBox("Blob Interior FX")
+        section = SectionBox("Blob Interior FX", "💎")
         section.setChecked(False)
 
         self.intra_blob_enabled_cb = QCheckBox("Enable blob interior FX")
@@ -751,7 +771,7 @@ class ControlPanel(QDockWidget):
         self.intra_blob_highlight_spin.setVisible(is_highlight)
 
     def _build_detection_mode_section(self) -> SectionBox:
-        section = SectionBox("Detection Mode")
+        section = SectionBox("Detection Mode", "🔍")
 
         self.detector_mode_combo = QComboBox()
         self.detector_mode_combo.addItem("Contour", "contour")
@@ -793,7 +813,7 @@ class ControlPanel(QDockWidget):
         return section
 
     def _build_output_section(self) -> SectionBox:
-        section = SectionBox("Output")
+        section = SectionBox("Output", "📤")
 
         self.export_path_edit = QLineEdit(str(self.param_store.get("output.export_path")))
         pick_btn = QPushButton("Browse")
@@ -828,7 +848,7 @@ class ControlPanel(QDockWidget):
         return section
 
     def _build_presets_section(self) -> SectionBox:
-        section = SectionBox("Presets")
+        section = SectionBox("Presets", "💾")
 
         self.preset_name_edit = QLineEdit("default")
         self.preset_list = QListWidget()
@@ -854,7 +874,7 @@ class ControlPanel(QDockWidget):
         return section
 
     def _build_performance_section(self) -> SectionBox:
-        section = SectionBox("Performance")
+        section = SectionBox("Performance", "⚡")
 
         self.process_scale_slider = QSlider(Qt.Orientation.Horizontal)
         self.process_scale_slider.setRange(25, 100)
@@ -903,7 +923,7 @@ class ControlPanel(QDockWidget):
         self.performance_fps_label.setText("FPS: {:.1f}".format(float(fps)))
 
     def _build_render_to_file_section(self) -> SectionBox:
-        section = SectionBox("Render to File")
+        section = SectionBox("Render to File", "🎬")
 
         info = QLabel("Offline render - processes every frame at full quality")
 
