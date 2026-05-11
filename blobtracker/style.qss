@@ -1,0 +1,142 @@
+* {
+    background: #0e0e0e;
+    color: #f0f0f0;
+    border: none;
+    font-family: "JetBrains Mono", "Courier New", monospace;
+    font-size: 12px;
+}
+
+QMainWindow, QWidget {
+    background: #0e0e0e;
+}
+
+QDockWidget {
+    titlebar-close-icon: none;
+    titlebar-normal-icon: none;
+}
+
+QDockWidget::title {
+    background: #1a1a1a;
+    color: #f0f0f0;
+    border-bottom: 1px solid #2a2a2a;
+    padding: 4px 6px;
+}
+
+QGroupBox {
+    background: #1a1a1a;
+    border: 1px solid #2a2a2a;
+    margin-top: 10px;
+    padding-top: 8px;
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top left;
+    padding: 0 4px;
+}
+
+QLabel, QListWidget, QLineEdit, QSpinBox, QDoubleSpinBox, QComboBox {
+    background: #1a1a1a;
+    border: 1px solid #2a2a2a;
+    padding: 2px 4px;
+}
+
+QPushButton {
+    background: #1a1a1a;
+    border: 1px solid #2a2a2a;
+    padding: 4px 8px;
+}
+
+QPushButton:hover, QPushButton:focus {
+    border: 1px solid #00e5ff;
+}
+
+QPushButton:pressed {
+    background: #222222;
+}
+
+QCheckBox {
+    spacing: 6px;
+}
+
+QCheckBox::indicator {
+    width: 14px;
+    height: 14px;
+    border: 1px solid #2a2a2a;
+    background: #1a1a1a;
+}
+
+QCheckBox::indicator:checked {
+    background: #00e5ff;
+}
+
+QStatusBar {
+    background: #1a1a1a;
+    border-top: 1px solid #2a2a2a;
+}
+
+QMenuBar, QMenu {
+    background: #1a1a1a;
+    border: 1px solid #2a2a2a;
+}
+
+QMenu::item:selected {
+    background: #00e5ff;
+    color: #0e0e0e;
+}
+
+#playback_bar {
+    background: #111111;
+    border-top: 1px solid #2a2a2a;
+    padding: 4px 8px;
+}
+
+#playback_bar QPushButton {
+    background: transparent;
+    border: none;
+    color: #cccccc;
+    font-size: 14px;
+    min-width: 28px;
+    min-height: 28px;
+    border-radius: 4px;
+    padding: 0px;
+}
+
+#playback_bar QPushButton:hover {
+    background: #2a2a2a;
+}
+
+#playback_bar QPushButton:checked {
+    background: #1a3a2a;
+    color: #4caf80;
+}
+
+#timeline_slider::groove:horizontal {
+    height: 3px;
+    background: #333333;
+    border-radius: 1px;
+}
+
+#timeline_slider::handle:horizontal {
+    width: 10px;
+    height: 10px;
+    margin: -4px 0;
+    border-radius: 5px;
+    background: #f0f0f0;
+}
+
+#timeline_slider::handle:horizontal:hover {
+    background: #00e5ff;
+}
+
+#timeline_slider::sub-page:horizontal {
+    background: #555555;
+    border-radius: 1px;
+}
+
+#timecode_label {
+    color: #888888;
+    font-family: "JetBrains Mono", "Courier New", monospace;
+    font-size: 11px;
+    min-width: 90px;
+}

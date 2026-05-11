@@ -1,0 +1,142 @@
+{
+  "name": "surveillance",
+  "params": {
+    "input.source_type": "webcam",
+    "input.source_path": "",
+    "input.webcam_index": 0,
+    "input.target_fps": 30,
+    "blob.threshold": 90,
+    "blob.blur_radius": 7,
+    "blob.min_area": 120.0,
+    "blob.max_area": 50000.0,
+    "blob.max_count": 20,
+    "process_scale": 0.5,
+    "detect_every_n": 2,
+    "min_label_area": 200,
+    "tracking.smoothing": 0.35,
+    "tracking.max_trail_length": 35,
+    "tracking.id_font_size": 0.5,
+    "tracking.label_offset_x": 10,
+    "tracking.label_offset_y": -10,
+    "effects.bbox_enabled": false,
+    "effects.label_enabled": false,
+    "effects.trail_enabled": false,
+    "effects.zoom_enabled": false,
+    "effects.flow_enabled": false,
+    "effects.bbox_color": [
+      240,
+      240,
+      240
+    ],
+    "effects.bbox_thickness": 1,
+    "effects.bbox_corner_style": "rect",
+    "effects.label_color": [
+      240,
+      240,
+      240
+    ],
+    "effects.label_show_coords": false,
+    "effects.trail_color": [
+      0,
+      229,
+      255
+    ],
+    "effects.trail_alpha": 0.8,
+    "effects.trail_thickness": 1,
+    "effects.zoom_blob_id": 0,
+    "effects.zoom_factor": 2.0,
+    "effects.zoom_corner": "top-right",
+    "effects.blend_mode": "normal",
+    "frame_desaturate": 0.0,
+    "frame_grain": 0.0,
+    "frame_vignette": 0.0,
+    "overlay_corner_style": "ticks",
+    "overlay_tick_length": 10,
+    "overlay_box_opacity": 0.7,
+    "overlay_show_label": true,
+    "overlay_show_area": false,
+    "overlay_show_coords": false,
+    "overlay_show_leaders": true,
+    "overlay_show_centroid": true,
+    "connection_enabled": true,
+    "connection_max_dist": 200.0,
+    "connection_opacity": 0.4,
+    "connection_thickness": 0.5,
+    "connection_color": [
+      255,
+      255,
+      255
+    ],
+    "connection_show_dots": true,
+    "connection_dot_radius": 3,
+    "trail_length": 20,
+    "zoom_inset_enabled": false,
+    "zoom_inset_scale": 1.8,
+    "detector_mode": "contour",
+    "blob_min_area": 80,
+    "blob_max_area": 8000,
+    "tracker_max_disappeared": 5,
+    "tracker_smooth_alpha": 0.4,
+    "creative.enabled": false,
+    "creative.filter_order": [],
+    "creative.filter_params": {
+      "GrainFilter": {
+        "intensity": 0.08,
+        "grain_type": "gaussian",
+        "colored": false
+      },
+      "GlitchFilter": {
+        "slices": 8,
+        "max_offset": 24,
+        "probability": 0.5
+      },
+      "ThermalFilter": {
+        "colormap": "inferno"
+      },
+      "EdgeFilter": {
+        "low": 80,
+        "high": 180,
+        "alpha": 0.7,
+        "blur": 0
+      },
+      "ChromaticAberration": {
+        "shift_x": 3,
+        "shift_y": 0,
+        "randomize": false
+      }
+    },
+    "creative.grain_intensity": 0.08,
+    "creative.grain_type": "gaussian",
+    "creative.grain_colored": false,
+    "fx_grain_enabled": true,
+    "fx_glitch_enabled": false,
+    "fx_thermal_enabled": false,
+    "fx_edge_enabled": false,
+    "fx_chroma_enabled": false,
+    "creative.glitch_slices": 8,
+    "creative.glitch_offset": 24,
+    "creative.glitch_probability": 0.5,
+    "creative.edge_low_threshold": 80,
+    "creative.edge_high_threshold": 180,
+    "creative.edge_alpha": 0.7,
+    "creative.edge_blur": 0,
+    "creative.chroma_shift_x": 3,
+    "creative.chroma_shift_y": 0,
+    "creative.chroma_randomize": false,
+    "creative.thermal_colormap": "inferno",
+    "intra_blob_enabled": true,
+    "intra_blob_mode": "thermal",
+    "intra_blob_opacity": 1.0,
+    "intra_blob_padding": 6,
+    "intra_blob_feather": true,
+    "intra_blob_pixel_size": 12,
+    "intra_blob_blur_radius": 21,
+    "intra_blob_highlight": 1.4,
+    "output.export_path": "output.mp4",
+    "output.format": "mp4",
+    "output.recording": false
+  },
+  "meta": {
+    "version": 1
+  }
+}
