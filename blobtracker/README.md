@@ -2,6 +2,8 @@
 
 BlobTracker is a native desktop application (Python + PyQt6 + OpenCV) for real-time blob tracking with cinematic overlays: stable IDs, bounding boxes, centroid dots, trail lines, zoom insets, optical flow, and stackable creative filters.
 
+> **Looking for the full docs?** See [`docs/README.md`](docs/README.md) for the user guide, architecture, parameter reference, development guide, and troubleshooting.
+
 ## Setup
 
 1. Create and activate a Python 3.8 environment.
