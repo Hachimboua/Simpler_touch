@@ -71,16 +71,18 @@ class MainWindow(QMainWindow):
         self.playback_bar = QWidget(self)
         self.playback_bar.setObjectName("playback_bar")
         bar_layout = QHBoxLayout(self.playback_bar)
-        bar_layout.setContentsMargins(4, 4, 4, 4)
-        bar_layout.setSpacing(6)
+        bar_layout.setContentsMargins(10, 5, 10, 5)
+        bar_layout.setSpacing(4)
 
         self.btn_skip_start = QPushButton("⏮")
         self.btn_play_pause = QPushButton("▶")
         self.btn_skip_end = QPushButton("⏭")
-        self.btn_loop = QPushButton("↺")
-        for btn in [self.btn_skip_start, self.btn_play_pause, self.btn_skip_end, self.btn_loop]:
+        self.btn_loop = QPushButton("⟳")
+        for btn in [self.btn_skip_start, self.btn_skip_end, self.btn_loop]:
             btn.setFlat(True)
-            btn.setFixedSize(28, 28)
+            btn.setFixedSize(32, 32)
+        self.btn_play_pause.setFlat(True)
+        self.btn_play_pause.setFixedSize(38, 38)
         self.btn_loop.setCheckable(True)
 
         self.btn_skip_start.clicked.connect(self._on_skip_start)
@@ -256,15 +258,27 @@ class MainWindow(QMainWindow):
         help_menu.addAction(about_action)
 
     def _build_statusbar(self) -> None:
-        self.status_fps = QLabel("FPS: 0.0")
-        self.status_blobs = QLabel("Blobs: 0")
-        self.status_record = QLabel("REC: OFF")
-        self.status_source = QLabel("Source: idle")
+        sb = self.statusBar()
+        sb.setSizeGripEnabled(False)
 
-        self.statusBar().addPermanentWidget(self.status_fps)
-        self.statusBar().addPermanentWidget(self.status_blobs)
-        self.statusBar().addPermanentWidget(self.status_record)
-        self.statusBar().addPermanentWidget(self.status_source)
+        def _status_label(text: str, color: str = "#5a6a7a") -> QLabel:
+            lbl = QLabel(text)
+            lbl.setStyleSheet(
+                "QLabel {{ color: {}; font-family: 'JetBrains Mono','Courier New',monospace;"
+                " font-size: 11px; background: transparent; padding: 0 10px; border-right:"
+                " 1px solid #1a2030; }}".format(color)
+            )
+            return lbl
+
+        self.status_fps = _status_label("⚡ 0.0 fps")
+        self.status_blobs = _status_label("◉ 0 blobs")
+        self.status_record = _status_label("○ idle")
+        self.status_source = _status_label("▸ ready")
+
+        sb.addPermanentWidget(self.status_source)
+        sb.addPermanentWidget(self.status_blobs)
+        sb.addPermanentWidget(self.status_fps)
+        sb.addPermanentWidget(self.status_record)
 
         self._status_timer = QTimer(self)
         self._status_timer.timeout.connect(self.refresh_status)
@@ -841,34 +855,29 @@ class MainWindow(QMainWindow):
             self.param_store.set("output.recording", False)
             self.status_source.setText("Source: file ended")
 
-        rec_indicator = "REC: ON" if self.exporter.is_recording else "REC: OFF"
-        rec_dot = "● REC" if self.exporter.recording else "○"
         if len(self._render_times) >= 2 and self._render_times[-1] > self._render_times[0]:
             fps = (len(self._render_times) - 1) / (self._render_times[-1] - self._render_times[0])
         else:
             fps = 0.0
         self._fps = float(fps)
 
-        scale = float(self.param_store.get("process_scale")) if "process_scale" in self.param_store.params else 1.0
-        self.statusBar().showMessage(
-            "FPS: {:.1f}  |  Blobs: {}  |  Scale: {:.2f}  |  {}".format(
-                self._fps,
-                self._latest_blob_count,
-                scale,
-                rec_dot,
-            )
+        is_rec = self.exporter.is_recording
+        _base = (
+            "QLabel {{ color: {}; font-family: 'JetBrains Mono','Courier New',monospace;"
+            " font-size: 11px; background: transparent; padding: 0 10px;"
+            " border-right: 1px solid #1a2030; }}"
         )
-        self.status_fps.setText(
-            "FPS: {:.1f} | Blobs: {} | {}".format(self._fps, self._latest_blob_count, rec_indicator)
-        )
-        self.status_blobs.setText("Blobs: {}".format(self._latest_blob_count))
-        self.status_record.setText(rec_indicator)
+        self.status_fps.setText("⚡ {:.1f} fps".format(self._fps))
+        self.status_blobs.setText("◉ {} blobs".format(self._latest_blob_count))
+        if is_rec:
+            self.status_record.setText("● REC")
+            self.status_record.setStyleSheet(_base.format("#ff4466"))
+        else:
+            self.status_record.setText("○ idle")
+            self.status_record.setStyleSheet(_base.format("#3a4a5a"))
+
         if hasattr(self.control_panel, "set_performance_fps"):
             self.control_panel.set_performance_fps(self._fps)
-        if self.exporter.is_recording:
-            self.status_record.setStyleSheet("color: #00e5ff;")
-        else:
-            self.status_record.setStyleSheet("color: #f0f0f0;")
 
     def start_recording(self) -> None:
         if self.exporter.is_recording:

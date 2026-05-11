@@ -32,17 +32,40 @@ from PyQt6.QtWidgets import (
 from param_store import ParamStore
 
 
+_SECTION_ICONS = {
+    "Input":             "▶",
+    "Blob":              "◉",
+    "Tracking":          "⟳",
+    "Effects":           "✦",
+    "Frame FX":          "⬡",
+    "Overlay Style":     "⊡",
+    "Connection Lines":  "⌖",
+    "Blob Interior FX":  "⬔",
+    "Detection Mode":    "◈",
+    "Creative":          "✺",
+    "Output":            "⏺",
+    "Presets":           "☰",
+    "Performance":       "⚡",
+    "Render to File":    "⬇",
+}
+
+
 class SectionBox(QGroupBox):
     def __init__(self, title: str) -> None:
-        super().__init__(title)
+        icon = _SECTION_ICONS.get(title, "▸")
+        super().__init__(f"{icon}  {title}")
         self.setCheckable(True)
         self.setChecked(True)
         self.content = QWidget()
         self.layout_root = QVBoxLayout(self)
-        self.layout_root.setContentsMargins(6, 8, 6, 6)
+        self.layout_root.setContentsMargins(4, 10, 4, 8)
+        self.layout_root.setSpacing(0)
         self.layout_root.addWidget(self.content)
         self.inner_layout = QFormLayout(self.content)
-        self.inner_layout.setContentsMargins(0, 0, 0, 0)
+        self.inner_layout.setContentsMargins(2, 4, 2, 2)
+        self.inner_layout.setSpacing(6)
+        self.inner_layout.setLabelAlignment(Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter)
+        self.inner_layout.setFormAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop)
         self.toggled.connect(self.content.setVisible)
 
 
@@ -108,7 +131,7 @@ class ControlPanel(QDockWidget):
         scroll.setWidget(root)
 
         self.setWidget(scroll)
-        self.setMinimumWidth(300)
+        self.setMinimumWidth(280)
         self.param_store.params_bulk_changed.connect(self.sync_all_from_store)
         self.refresh_presets_list()
         self.refresh_filter_order()
@@ -256,15 +279,37 @@ class ControlPanel(QDockWidget):
         return section
 
     def _make_color_button(self, key: str) -> QPushButton:
-        btn = QPushButton("Pick")
+        btn = QPushButton()
+        btn.setFixedHeight(22)
+        btn.setMinimumWidth(80)
+        btn.setCursor(Qt.CursorShape.PointingHandCursor)
 
         def update_button() -> None:
             c = self.param_store.get(key)
-            btn.setStyleSheet("background-color: rgb({}, {}, {});".format(c[0], c[1], c[2]))
+            r, g, b = int(c[0]), int(c[1]), int(c[2])
+            luma = 0.299 * r + 0.587 * g + 0.114 * b
+            text_color = "#0c0e10" if luma > 140 else "#e8ecf0"
+            hex_color = "#{:02x}{:02x}{:02x}".format(r, g, b)
+            btn.setText(hex_color.upper())
+            btn.setStyleSheet(
+                "QPushButton {{"
+                "   background: rgb({r},{g},{b});"
+                "   border: 1px solid rgba(255,255,255,0.15);"
+                "   border-radius: 3px;"
+                "   color: {txt};"
+                "   font-family: 'JetBrains Mono','Courier New',monospace;"
+                "   font-size: 10px;"
+                "   letter-spacing: 1px;"
+                "   padding: 0 6px;"
+                "}}"
+                "QPushButton:hover {{"
+                "   border: 1px solid rgba(255,255,255,0.4);"
+                "}}".format(r=r, g=g, b=b, txt=text_color)
+            )
 
         def pick() -> None:
             current = self.param_store.get(key)
-            color = QColorDialog.getColor(QColor(current[0], current[1], current[2]), self)
+            color = QColorDialog.getColor(QColor(int(current[0]), int(current[1]), int(current[2])), self)
             if color.isValid():
                 self.param_store.set(key, [color.red(), color.green(), color.blue()])
                 update_button()

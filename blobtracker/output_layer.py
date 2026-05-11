@@ -19,17 +19,28 @@ from PyQt6.QtWidgets import QLabel, QWidget, QVBoxLayout
 class PreviewRenderer(QWidget):
     def __init__(self, parent=None) -> None:
         super().__init__(parent)
+        self.setStyleSheet("background: #060708;")
         self.label = QLabel()
         self.label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.label.setMinimumSize(640, 360)
+        self.label.setText("NO SOURCE")
+        self.label.setStyleSheet(
+            "QLabel { background: transparent; color: #1a2535;"
+            " font-family: 'JetBrains Mono','Courier New',monospace;"
+            " font-size: 13px; letter-spacing: 4px; }"
+        )
 
         layout = QVBoxLayout(self)
         layout.setContentsMargins(0, 0, 0, 0)
         layout.addWidget(self.label)
         self._last_frame: Optional[np.ndarray] = None
+        self._has_content = False
 
     def update_frame(self, frame_bgr: np.ndarray) -> None:
         self._last_frame = frame_bgr
+        if not self._has_content:
+            self._has_content = True
+            self.label.setStyleSheet("QLabel { background: transparent; }")
         rgb = cv2.cvtColor(frame_bgr, cv2.COLOR_BGR2RGB)
         h, w, c = rgb.shape
         image = QImage(rgb.data, w, h, c * w, QImage.Format.Format_RGB888)
