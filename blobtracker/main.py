@@ -48,8 +48,8 @@ class MainWindow(QMainWindow):
     def __init__(self, app_dir: str) -> None:
         super().__init__()
         self.app_dir = app_dir
-        self.setWindowTitle("BlobTracker")
-        self.resize(1400, 860)
+        self.setWindowTitle("BLOBTRACKER  ·  Real-time Blob Tracking")
+        self.resize(1440, 880)
 
         presets_dir = os.path.join(self.app_dir, "presets")
         plugins_dir = os.path.join(self.app_dir, "plugins")
@@ -340,6 +340,7 @@ class MainWindow(QMainWindow):
         self.param_store.set("input.source_path", path)
         self.control_panel.file_path_edit.setText(path)
         self.control_panel.source_combo.setCurrentText("file")
+        self.setWindowTitle("BLOBTRACKER  ·  {}".format(os.path.basename(path)))
         self.start_selected_source()
 
     def start_selected_source(self) -> None:
@@ -367,7 +368,7 @@ class MainWindow(QMainWindow):
         if not ok:
             QMessageBox.critical(self, "Input", "Unable to open source.")
             self._source_running = False
-            self.status_source.setText("Source: failed")
+            self.status_source.setText("✕ open failed")
             self.control_panel.update_playback_state("stopped")
             return
 
@@ -385,7 +386,7 @@ class MainWindow(QMainWindow):
             self.playback_bar.show()
 
         self.control_panel.update_playback_state("playing")
-        self.status_source.setText("Source: {}".format(source_label))
+        self.status_source.setText("▶ {}".format(source_label))
 
     def stop_source(self) -> None:
         self.capture_worker.stop()
@@ -405,7 +406,7 @@ class MainWindow(QMainWindow):
             self._render_mode_active = False
             self.exporter.stop()
         self.control_panel.update_playback_state("stopped")
-        self.status_source.setText("Source: idle")
+        self.status_source.setText("▸ idle")
 
     def on_frame_packet(self, packet) -> None:
         if self._render_mode_active or self._render_finishing:
@@ -422,7 +423,7 @@ class MainWindow(QMainWindow):
             self._is_playing = True
             self.btn_play_pause.setText("⏸")
             self.control_panel.update_playback_state("playing")
-            self.status_source.setText("Source: playing")
+            self.status_source.setText("▶ playing")
         else:
             self.start_selected_source()
 
@@ -436,7 +437,7 @@ class MainWindow(QMainWindow):
         self._is_playing = False
         self.btn_play_pause.setText("▶")
         self.control_panel.update_playback_state("paused")
-        self.status_source.setText("Source: paused")
+        self.status_source.setText("⏸ paused")
 
     def _on_play_pause(self) -> None:
         if self._current_file_source is None:
@@ -679,7 +680,7 @@ class MainWindow(QMainWindow):
         self._render_finishing = False
         self._set_playback_controls_enabled(False)
         self.control_panel.update_playback_state("playing")
-        self.status_source.setText("Source: rendering → {}".format(os.path.basename(target)))
+        self.status_source.setText("⏺ render → {}".format(os.path.basename(target)))
 
     def _finish_render(self) -> None:
         if not self._render_mode_active:
@@ -694,7 +695,7 @@ class MainWindow(QMainWindow):
         self._current_file_source = None
         self._set_playback_controls_enabled(True)
         self.control_panel.update_playback_state("stopped")
-        self.status_source.setText("Source: idle")
+        self.status_source.setText("▸ idle")
         QMessageBox.information(self, "Render Complete", "Video rendered successfully.")
 
     def _update_render_timer_interval(self, fps: int) -> None:
@@ -853,7 +854,7 @@ class MainWindow(QMainWindow):
         ):
             self.stop_recording()
             self.param_store.set("output.recording", False)
-            self.status_source.setText("Source: file ended")
+            self.status_source.setText("◼ end of file")
 
         if len(self._render_times) >= 2 and self._render_times[-1] > self._render_times[0]:
             fps = (len(self._render_times) - 1) / (self._render_times[-1] - self._render_times[0])
@@ -975,7 +976,7 @@ class MainWindow(QMainWindow):
         self.control_panel.set_offline_render_progress(0, "Frame 0 / {}".format(max(0, total_frames)))
         self.control_panel.set_offline_render_status("Starting...")
         self.control_panel.record_btn.setEnabled(False)
-        self.status_source.setText("Source: offline rendering")
+        self.status_source.setText("⬇ offline render")
 
         self.offline_renderer.start_render(source_path, output_path)
 
@@ -1001,7 +1002,7 @@ class MainWindow(QMainWindow):
         self.control_panel.record_btn.setEnabled(True)
         if not self.exporter.recording:
             self._set_playback_controls_enabled(True)
-        self.status_source.setText("Source: idle")
+        self.status_source.setText("▸ idle")
         QMessageBox.information(self, "Render to File", "Render complete. Saved to: {}".format(path))
 
     def _on_render_error(self, msg: str) -> None:
@@ -1014,7 +1015,7 @@ class MainWindow(QMainWindow):
         self.control_panel.record_btn.setEnabled(True)
         if not self.exporter.recording:
             self._set_playback_controls_enabled(True)
-        self.status_source.setText("Source: idle")
+        self.status_source.setText("▸ idle")
         QMessageBox.warning(self, "Render to File", str(msg))
 
     def save_project(self) -> None:
@@ -1066,11 +1067,21 @@ class MainWindow(QMainWindow):
             self.showFullScreen()
 
     def show_about(self) -> None:
-        QMessageBox.information(
-            self,
-            "About",
-            "BlobTracker\nReal-time blob tracking and creative overlays.",
+        box = QMessageBox(self)
+        box.setWindowTitle("About BlobTracker")
+        box.setIcon(QMessageBox.Icon.NoIcon)
+        box.setTextFormat(Qt.TextFormat.RichText)
+        box.setText(
+            "<div style='color:#00c8f0; font-family:\"JetBrains Mono\",monospace;"
+            " font-size:15px; letter-spacing:3px;'><b>BLOBTRACKER</b></div>"
+            "<div style='color:#7a8a9a; font-size:11px; margin-top:4px;'>"
+            "Real-time blob tracking and creative overlays."
+            "</div>"
+            "<div style='color:#4a5a6a; font-size:10px; margin-top:14px;'>"
+            "PyQt6 · OpenCV · NumPy"
+            "</div>"
         )
+        box.exec()
 
     def closeEvent(self, event) -> None:
         if self._offline_render_active:
