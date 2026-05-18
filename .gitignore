@@ -1,3 +1,9 @@
 ﻿build/
 dist/
 *.mp4
+.env
+__pycache__/
+*.pyc
+.claude/
+blobtracker_render_tmp/
+blobtracker/blobtracker_render_tmp/

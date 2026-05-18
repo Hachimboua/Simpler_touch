@@ -619,3 +619,86 @@ QToolTip {
 #section_creative QGroupBox::title  { color: #f06090; }
 #section_output QGroupBox::title    { color: #5acccc; }
 #section_presets QGroupBox::title   { color: #7a7acc; }
+
+/* ── Assistant Toolbar ─────────────────────────────────────────────────────── */
+
+#assistant_toolbar {
+    background: #0a0c0f;
+    border-bottom: 1px solid #1a2030;
+    padding: 4px 8px;
+    spacing: 6px;
+}
+
+#assistant_toolbar QToolButton {
+    background: #131822;
+    border: 1px solid #1f2735;
+    border-radius: 4px;
+    color: #cdd2da;
+    font-size: 12px;
+    padding: 5px 12px;
+}
+
+#assistant_toolbar QToolButton:hover {
+    background: #1a2230;
+    border-color: #00c8f060;
+    color: #ffffff;
+}
+
+#assistant_toolbar QToolButton:checked {
+    background: #0d2a3f;
+    border-color: #00c8f0;
+    color: #00c8f0;
+}
+
+/* ── Chatbot Dock ──────────────────────────────────────────────────────────── */
+
+#chatbot_dock {
+    background: #0d1015;
+}
+
+#chatbot_transcript {
+    background: #0a0c10;
+    border: 1px solid #1a2030;
+    border-radius: 4px;
+    color: #cdd2da;
+    padding: 6px 8px;
+    font-size: 12px;
+}
+
+#chatbot_status {
+    color: #5a7a96;
+    font-size: 11px;
+    font-style: italic;
+    padding: 2px 4px;
+}
+
+#chatbot_dock QLineEdit {
+    background: #11151c;
+    border: 1px solid #252d3a;
+    border-radius: 4px;
+    color: #e6ecf3;
+    padding: 6px 8px;
+}
+
+#chatbot_dock QLineEdit:focus {
+    border-color: #00c8f0;
+}
+
+#chatbot_dock QPushButton {
+    background: #13181f;
+    border: 1px solid #1f2735;
+    border-radius: 4px;
+    color: #cdd2da;
+    padding: 5px 10px;
+}
+
+#chatbot_dock QPushButton:hover {
+    background: #1a2230;
+    border-color: #00c8f060;
+    color: #00c8f0;
+}
+
+#chatbot_dock QPushButton:pressed {
+    background: #0d2a3f;
+}
+

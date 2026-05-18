@@ -1,0 +1,1454 @@
+% ============================================================================
+%  BlobTracker — Complete Documentation
+%  Authors: Hachim Boubdillah & Baqua Abdellah
+%
+%  Build with:   latexmk -pdf blobtracker_documentation.tex
+%        or:    pdflatex blobtracker_documentation.tex (run twice for TOC)
+% ============================================================================
+
+\documentclass[11pt,a4paper,openany]{report}
+
+% ---- Encoding ---------------------------------------------------------------
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage{lmodern}
+\usepackage{textcomp}
+
+% ---- Layout -----------------------------------------------------------------
+\usepackage[a4paper,margin=2.2cm,headheight=15pt]{geometry}
+\usepackage{parskip}
+\usepackage{microtype}
+\usepackage{enumitem}
+\setlist{nosep,leftmargin=1.4em}
+
+% ---- Colors (matches the BlobTracker dark cyan theme) -----------------------
+\usepackage{xcolor}
+\definecolor{btBg}{HTML}{0C0E10}
+\definecolor{btPanel}{HTML}{101316}
+\definecolor{btAccent}{HTML}{00C8F0}
+\definecolor{btAccentDark}{HTML}{006E96}
+\definecolor{btMuted}{HTML}{5A6A7A}
+\definecolor{btCode}{HTML}{1A2030}
+\definecolor{btRule}{HTML}{2A3344}
+\definecolor{btText}{HTML}{1E2A38}
+
+% ---- Hyperlinks -------------------------------------------------------------
+\usepackage[hidelinks]{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=btAccentDark,
+    urlcolor=btAccentDark,
+    citecolor=btAccentDark,
+    pdftitle={BlobTracker --- Complete Documentation},
+    pdfauthor={Hachim Boubdillah and Baqua Abdellah},
+    pdfsubject={Real-time blob tracking, creative overlays, and PyQt6 desktop application},
+    pdfkeywords={BlobTracker, PyQt6, OpenCV, blob detection, tracking, video, ffmpeg}
+}
+
+% ---- Tables -----------------------------------------------------------------
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{tabularx}
+\usepackage{colortbl}
+\renewcommand{\arraystretch}{1.25}
+
+% ---- Code listings ----------------------------------------------------------
+\usepackage{listings}
+\lstdefinestyle{btmono}{
+    basicstyle=\ttfamily\small,
+    backgroundcolor=\color{btCode!10},
+    frame=single,
+    rulecolor=\color{btRule},
+    framesep=4pt,
+    breaklines=true,
+    breakatwhitespace=false,
+    columns=fullflexible,
+    keepspaces=true,
+    showstringspaces=false,
+    captionpos=b,
+    keywordstyle=\color{btAccentDark}\bfseries,
+    commentstyle=\color{btMuted}\itshape,
+    stringstyle=\color{btAccentDark},
+    extendedchars=true,
+    inputencoding=utf8,
+    literate=
+        {├}{{\textbar}}1 {└}{{\textbar}}1 {│}{{\textbar}}1
+        {─}{{-}}1 {▶}{{>}}1 {◀}{{<}}1 {⏮}{{|<}}2 {⏭}{{>|}}2
+        {⏸}{{||}}2 {⏹}{{[]}}2 {⟳}{{O}}1 {◉}{{(o)}}3 {⚡}{{!}}1
+        {◼}{{[]}}2 {✕}{{x}}1 {●}{{*}}1 {○}{{o}}1 {▸}{{>}}1
+        {⬇}{{v}}1 {⏺}{{(*)}}3 {├──}{{|--}}3 {└──}{{`--}}3
+        {⊡}{{[+]}}3 {⌖}{{(+)}}3 {⬔}{{<>}}2 {◈}{{<*>}}3
+        {✺}{{*}}1 {☰}{{=}}1 {⬡}{{<>}}2 {✦}{{*}}1
+}
+\lstset{style=btmono}
+
+\lstdefinelanguage{json}{
+    morestring=[b]",
+    morestring=[d]"
+}
+
+% ---- Headings ---------------------------------------------------------------
+\usepackage{titlesec}
+\titleformat{\chapter}[display]
+  {\normalfont\sffamily\Huge\bfseries\color{btAccentDark}}
+  {\filright\Large\textsc{Chapter \thechapter}}
+  {0.5ex}
+  {\titlerule[1.5pt]\vspace{0.6ex}\filright}
+\titlespacing*{\chapter}{0pt}{0pt}{30pt}
+
+\titleformat{\section}
+  {\normalfont\sffamily\Large\bfseries\color{btAccentDark}}{\thesection}{1em}{}
+\titleformat{\subsection}
+  {\normalfont\sffamily\large\bfseries}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}
+  {\normalfont\sffamily\normalsize\bfseries\color{btMuted}}{}{0pt}{}
+
+% ---- Headers / footers ------------------------------------------------------
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\sffamily\textcolor{btMuted}{BlobTracker}}
+\fancyhead[R]{\small\sffamily\textcolor{btMuted}{\nouppercase{\leftmark}}}
+\fancyfoot[C]{\small\sffamily\textcolor{btMuted}{\thepage}}
+\renewcommand{\headrulewidth}{0.3pt}
+\renewcommand{\footrulewidth}{0pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{btRule}\leaders\hrule height \headrulewidth\hfill}}
+
+% ---- Callout boxes ----------------------------------------------------------
+\usepackage[most]{tcolorbox}
+\tcbset{
+    btnote/.style={
+        colback=btCode!8,
+        colframe=btAccent,
+        boxrule=0.4pt,
+        leftrule=2.5pt,
+        arc=1pt,
+        left=8pt,right=8pt,top=4pt,bottom=4pt,
+        fontupper=\small
+    }
+}
+\newtcolorbox{btnote}{btnote}
+
+% ---- Title page metadata ----------------------------------------------------
+\title{
+    \vspace{2.5cm}
+    {\sffamily\Huge\bfseries\color{btAccentDark} BLOBTRACKER}\\[0.4cm]
+    {\sffamily\Large\textcolor{btMuted}{Real-time blob tracking, creative overlays, and PyQt6 desktop application}}\\[1.2cm]
+    {\large\sffamily Complete Project Documentation}
+}
+\author{
+    {\large Hachim Boubdillah} \\[0.2em]
+    {\large Baqua Abdellah}
+}
+\date{\today}
+
+% ============================================================================
+\begin{document}
+% ============================================================================
+
+% ---- Title page ------------------------------------------------------------
+\begin{titlepage}
+    \centering
+    \vspace*{2cm}
+
+    {\color{btAccentDark}\rule{0.6\linewidth}{1.5pt}}\\[0.6cm]
+    {\sffamily\Huge\bfseries\color{btAccentDark} BLOBTRACKER}\\[0.4cm]
+    {\sffamily\Large\textcolor{btMuted}{Complete Project Documentation}}\\[0.3cm]
+    {\color{btAccentDark}\rule{0.6\linewidth}{1.5pt}}\\[2cm]
+
+    {\sffamily\large
+    Real-time blob tracking, creative overlays,\\
+    and a PyQt6 desktop application built on OpenCV.\\[2cm]}
+
+    {\sffamily\normalsize\textcolor{btMuted}{Authored by}}\\[0.4cm]
+    {\sffamily\Large\bfseries Hachim Boubdillah}\\[0.2cm]
+    {\sffamily\Large\bfseries Baqua Abdellah}\\[3cm]
+
+    \vfill
+    {\sffamily\small\textcolor{btMuted}{\today}}\\[0.4cm]
+    {\sffamily\footnotesize\textcolor{btMuted}{PyQt6 \textbullet{} OpenCV \textbullet{} NumPy}}
+\end{titlepage}
+
+% ---- Table of contents -----------------------------------------------------
+\pagenumbering{roman}
+\tableofcontents
+\clearpage
+\pagenumbering{arabic}
+
+% ============================================================================
+\chapter{Introduction}
+% ============================================================================
+
+\section{Project Overview}
+
+\textbf{BlobTracker} is a native desktop application written in Python, built
+on PyQt6 and OpenCV. It provides real-time blob detection and tracking with
+cinematic overlays: stable IDs, bounding boxes, centroid dots, trail lines,
+zoom insets, optical flow vectors, and a stackable creative filter chain.
+
+\section{At a Glance}
+
+\begin{itemize}
+    \item \textbf{Real-time blob detection} --- threshold/contour or OpenCV
+        \texttt{SimpleBlobDetector}.
+    \item \textbf{Stable ID tracking} --- Hungarian assignment combined with
+        centroid smoothing and trail history.
+    \item \textbf{Live overlay FX} --- bounding boxes, IDs, coordinates,
+        trails, connection lines, optical flow vectors, blob-interior
+        effects, zoom inset.
+    \item \textbf{Creative filter chain} --- grain, glitch, thermal, edge,
+        chromatic aberration; drag to reorder; hot-reload custom plugins.
+    \item \textbf{Presets} --- save and load complete parameter sets as JSON.
+    \item \textbf{Export} --- record live to \texttt{mp4}, \texttt{png\_seq},
+        or \texttt{prores}, or perform a full-quality offline render of a
+        source file.
+\end{itemize}
+
+\section{Quick Start}
+
+\begin{lstlisting}[language=bash]
+# 1. Install Python 3.8+ and create a virtualenv
+python -m venv .venv
+.venv\Scripts\activate            # Windows
+# source .venv/bin/activate       # macOS / Linux
+
+# 2. Install dependencies
+pip install -r requirements.txt
+
+# 3. Run the app
+python main.py
+\end{lstlisting}
+
+The window opens with the control panel docked on the left and a video
+preview in the centre. Pick a source (webcam or file), press \textbf{Play},
+and tweak the sections to taste.
+
+\section{Documentation Map}
+
+\begin{tabularx}{\linewidth}{@{}lX@{}}
+    \toprule
+    \textbf{Chapter} & \textbf{Contents} \\
+    \midrule
+    User Guide       & Walkthrough of every UI section, playback, recording, presets, export. \\
+    Architecture     & Module layout, threading model, frame pipeline, signal flow. \\
+    Parameters       & Full reference of every parameter, default, range, and where it appears. \\
+    Development      & Dev setup, code conventions, writing plugins, preset format, extending the app. \\
+    Troubleshooting  & Common errors, performance tuning, ffmpeg / codec notes. \\
+    \bottomrule
+\end{tabularx}
+
+% ============================================================================
+\chapter{User Guide}
+% ============================================================================
+
+This chapter walks through every section of the BlobTracker UI, top to
+bottom.
+
+\section{Window Layout}
+
+\begin{lstlisting}[basicstyle=\ttfamily\footnotesize]
++-------------------------------------------------------------+
+| File   View   Effects   Help                                |   Menu bar
+|--------------+----------------------------------------------|
+|              |                                              |
+| CONTROL      |              VIDEO PREVIEW                   |
+| PANEL        |                                              |
+| (dockable)   |                                              |
+|              |                                              |
+|              |----------------------------------------------|
+|              |  |< >  >|  O   ----o----------  00:12/02:30  |   Playback bar
+|--------------+----------------------------------------------|
+| > playing | (o) 12 blobs | ! 29.4 fps | o idle              |   Status bar
++-------------------------------------------------------------+
+\end{lstlisting}
+
+\begin{itemize}
+    \item The \textbf{Control Panel} can be undocked, moved to the right
+        side, or hidden via the View menu.
+    \item The \textbf{Playback Bar} only appears for file sources.
+    \item The \textbf{Status Bar} updates four times per second.
+\end{itemize}
+
+\section{Hotkeys}
+
+\begin{tabularx}{\linewidth}{@{}lX@{}}
+    \toprule
+    \textbf{Key} & \textbf{Action} \\
+    \midrule
+    \texttt{Space} & Play / pause the current source \\
+    \texttt{R} & Toggle live recording \\
+    \texttt{P} & Open the visual preset browser \\
+    \texttt{F} & Toggle fullscreen preview \\
+    \bottomrule
+\end{tabularx}
+
+\section{Menu Bar}
+
+\subsection{File}
+\begin{itemize}
+    \item \textbf{Open Video\ldots} --- pick a media file and start playback immediately.
+    \item \textbf{Save Project / Load Project} --- persist the current source plus parameters.
+    \item \textbf{Quit}.
+\end{itemize}
+
+\subsection{View}
+\begin{itemize}
+    \item \textbf{Toggle Control Panel} --- hide/show the dock.
+    \item \textbf{Fullscreen Preview}.
+\end{itemize}
+
+\subsection{Effects}
+\begin{itemize}
+    \item \textbf{Hot Reload Plugins} --- re-scans \texttt{plugins/*.py}.
+\end{itemize}
+
+\subsection{Help}
+\begin{itemize}
+    \item \textbf{About}.
+\end{itemize}
+
+\section{Control Panel Sections}
+
+The sidebar is divided into collapsible sections. Click a section header (or
+its checkbox) to expand or collapse.
+
+\subsection{Input}
+Choose where frames come from.
+
+\begin{tabularx}{\linewidth}{@{}lX@{}}
+    \toprule
+    \textbf{Field} & \textbf{Notes} \\
+    \midrule
+    Source        & \texttt{webcam} or \texttt{file} \\
+    File          & Browse to an \texttt{.mp4 / .mov / .avi / .png} \\
+    Webcam Index  & OS camera index, usually \texttt{0} \\
+    Target FPS    & Capture/playback rate target \\
+    Play / Pause / Stop & Source transport \\
+    \bottomrule
+\end{tabularx}
+
+\begin{btnote}
+Picking \texttt{file} enables the \textbf{Render to File} action lower
+down the panel.
+\end{btnote}
+
+\subsection{Blob}
+Core detection knobs (applied to the preprocessed frame).
+
+\begin{tabularx}{\linewidth}{@{}lX@{}}
+    \toprule
+    \textbf{Field} & \textbf{Effect} \\
+    \midrule
+    Threshold     & Binarisation cut-off after grayscale + blur \\
+    Blur Radius   & Gaussian blur kernel (odd values) \\
+    Min / Max Area & Filters out blobs outside this contour-area band \\
+    Max Blob Count & Hard cap to keep performance stable \\
+    Smoothing     & Centroid smoothing alpha (0 = none, 1 = freeze) \\
+    \bottomrule
+\end{tabularx}
+
+\subsection{Tracking}
+Trail and label geometry.
+
+\begin{tabularx}{\linewidth}{@{}lX@{}}
+    \toprule
+    \textbf{Field} & \textbf{Effect} \\
+    \midrule
+    Max Trail Length     & Frames of history kept per blob \\
+    ID Font Size         & OpenCV font scale for IDs \\
+    Label Offset X/Y     & Offset of the ID label from the centroid (px) \\
+    \bottomrule
+\end{tabularx}
+
+\subsection{Effects}
+Overlay toggles and colours.
+
+\begin{itemize}
+    \item Checkbox toggles --- bounding box, labels, trail, zoom inset,
+        optical flow, show coords.
+    \item Colour pickers --- bbox / label / trail colour (swatch button
+        shows the current colour and hex).
+    \item BBox Thickness, Trail Alpha, Trail Thickness --- line styling.
+    \item Zoom Blob ID, Zoom Factor, Zoom Corner --- magnify a specific
+        tracked blob into one corner of the frame.
+    \item BBox Corner --- \texttt{rect} (full rectangle) or \texttt{corner}
+        (corner ticks only).
+    \item Blend Mode --- how the effect layer composites on the base frame
+        (\texttt{normal}, \texttt{screen}, \texttt{overlay}, \texttt{multiply}).
+\end{itemize}
+
+\subsection{Frame FX}
+Whole-frame look passes applied first in the pipeline.
+
+\begin{tabularx}{\linewidth}{@{}llX@{}}
+    \toprule
+    \textbf{Field} & \textbf{Range} & \textbf{Effect} \\
+    \midrule
+    Desaturate Amount & 0--1   & Mix toward grayscale \\
+    Grain Strength    & 0--0.2 & Additive noise \\
+    Vignette Strength & 0--1   & Darken the corners \\
+    \bottomrule
+\end{tabularx}
+
+\subsection{Overlay Style}
+Visual style for overlay text and markers (works alongside the Effects
+section).
+
+\begin{itemize}
+    \item \textbf{Corner Style} --- \texttt{full rect} or \texttt{corner ticks}.
+    \item \textbf{Tick Length} --- length of corner ticks in px.
+    \item \textbf{Box Opacity} --- overlay alpha.
+    \item \textbf{Show ID Label / Area / Coords / Leader Lines / Centroid Dot}
+        --- toggles for individual overlay components.
+    \item \textbf{Trail Length} --- short alias for
+        \texttt{tracking.max\_trail\_length}.
+    \item \textbf{Show Zoom Inset} --- alias toggle.
+\end{itemize}
+
+\subsection{Connection Lines}
+Draw lines between blobs whose centroids are within a distance threshold ---
+great for crowd or cluster visualisation.
+
+\begin{tabularx}{\linewidth}{@{}lX@{}}
+    \toprule
+    \textbf{Field} & \textbf{Effect} \\
+    \midrule
+    Enable Connections   & Master toggle \\
+    Max Distance         & Pixels --- pairs farther apart get no line \\
+    Line Opacity / Thickness & Self-explanatory \\
+    Show Junction Dots   & Draws a dot at each blob endpoint \\
+    Dot Radius / Color   & Junction dot styling \\
+    \bottomrule
+\end{tabularx}
+
+\subsection{Blob Interior FX}
+Apply a per-blob effect \emph{inside} the blob's bounding rect, leaving the
+rest of the frame alone.
+
+\begin{itemize}
+    \item \textbf{Mode} --- \texttt{none}, \texttt{thermal}, \texttt{edge},
+        \texttt{pixelate}, \texttt{negative}, \texttt{blur},
+        \texttt{highlight}, \texttt{desaturate}.
+    \item \textbf{Opacity} --- blend strength.
+    \item \textbf{Padding} --- grow the bounding box before applying.
+    \item \textbf{Feather edges} --- soft alpha on the mask edge.
+    \item Mode-specific options: \emph{Pixel size} (pixelate), \emph{Blur
+        radius} (blur), \emph{Brightness} (highlight).
+\end{itemize}
+
+\subsection{Detection Mode}
+Switch between detector backends and tracker behaviour.
+
+\begin{tabularx}{\linewidth}{@{}lX@{}}
+    \toprule
+    \textbf{Field} & \textbf{Effect} \\
+    \midrule
+    Detector Mode      & \texttt{Contour} (default) or \texttt{Simple Blob} \\
+    Min / Max Area     & Mirror of the Blob section, scoped to this mode \\
+    Disappeared Frames & How many missing frames before a tracked ID is dropped \\
+    Centroid Smoothing Alpha & Alias of \texttt{tracking.smoothing} \\
+    \bottomrule
+\end{tabularx}
+
+\subsection{Creative}
+Stackable creative filter chain.
+
+\begin{itemize}
+    \item \textbf{Enable Creative FX} --- master toggle.
+    \item \textbf{Filter Chain (drag to reorder)} --- drag rows in the list
+        to change the apply order.
+    \item \textbf{Hot Reload Plugins} --- re-scans \texttt{plugins/} and
+        rebuilds the filter registry without restarting the app.
+    \item Per-filter blocks (each with its own enable checkbox + params):
+    \begin{itemize}
+        \item \textbf{GrainFilter} --- intensity, type
+            (\texttt{gaussian / uniform / colored}), coloured.
+        \item \textbf{GlitchFilter} --- slices, max offset, probability.
+        \item \textbf{ThermalFilter} --- colormap (\texttt{inferno / hot /
+            cool / twilight / viridis}).
+        \item \textbf{EdgeFilter} --- low/high Canny thresholds, alpha, blur.
+        \item \textbf{ChromaticAberration} --- shift X/Y, randomize.
+    \end{itemize}
+\end{itemize}
+
+\subsection{Output (live record)}
+Real-time export while playing.
+
+\begin{tabularx}{\linewidth}{@{}lX@{}}
+    \toprule
+    \textbf{Field} & \textbf{Effect} \\
+    \midrule
+    Export Path    & Output file/folder \\
+    Format         & \texttt{mp4} (OpenCV), \texttt{png\_seq} (numbered PNGs), \texttt{prores} (ffmpeg, .mov) \\
+    Start / Stop Record & Toggles live capture to disk \\
+    Render Video   & Plays the file end-to-end, saving the processed result \\
+    \bottomrule
+\end{tabularx}
+
+\begin{btnote}
+Recording runs on a dedicated writer thread so the UI does not stall.
+\end{btnote}
+
+\subsection{Presets}
+Save the entire parameter set as JSON.
+
+\begin{itemize}
+    \item \textbf{Preset Name} + \textbf{Save} --- writes
+        \texttt{presets/<name>.json}.
+    \item \textbf{Load} --- applies the selected preset.
+    \item \textbf{Delete} --- removes the JSON file.
+\end{itemize}
+
+\texttt{presets/default.json} is auto-loaded on startup if present.
+
+\subsection{Performance}
+Trade quality for speed.
+
+\begin{tabularx}{\linewidth}{@{}lX@{}}
+    \toprule
+    \textbf{Field} & \textbf{Effect} \\
+    \midrule
+    Process Scale  & 0.25--1.0 --- detection on a downscaled copy (0.5 recommended) \\
+    Detect Every N & 1 = every frame, 2 = skip one, etc.\ (2 recommended) \\
+    Min Label Area & Skip drawing labels on blobs smaller than this \\
+    FPS Display    & Live read-out \\
+    \bottomrule
+\end{tabularx}
+
+\subsection{Render to File}
+\textbf{Offline, full-quality} render of a video file --- re-runs detection
+and tracking deterministically frame by frame, independent of the live
+preview rate.
+
+\begin{tabularx}{\linewidth}{@{}lX@{}}
+    \toprule
+    \textbf{Field} & \textbf{Effect} \\
+    \midrule
+    Output Path     & Final video destination \\
+    Render to File  & Starts the offline pipeline \\
+    Cancel          & Aborts the in-progress render \\
+    Progress / Status / Thumbnail & Live updates from the render worker \\
+    \bottomrule
+\end{tabularx}
+
+\begin{btnote}
+Only enabled when the source is \texttt{file}.
+\end{btnote}
+
+\section{Playback Bar (file sources only)}
+
+\begin{tabularx}{\linewidth}{@{}lX@{}}
+    \toprule
+    \textbf{Button} & \textbf{Action} \\
+    \midrule
+    \texttt{|<}  & Skip to start \\
+    \texttt{>}/\texttt{||} & Play / pause \\
+    \texttt{>|}  & Skip to end \\
+    \texttt{O}   & Toggle loop (green when active) \\
+    Timeline    & Click or drag to scrub \\
+    Timecode    & \texttt{MM:SS / MM:SS} \\
+    \bottomrule
+\end{tabularx}
+
+\section{Status Bar}
+
+Four monospace segments, refreshed every 250\,ms:
+
+\begin{itemize}
+    \item \texttt{> <source>} --- source state (idle / playing / paused /
+        end of file / render).
+    \item \texttt{(o) <n> blobs} --- count of currently tracked blobs.
+    \item \texttt{! <fps> fps} --- measured render FPS.
+    \item \texttt{o idle} --- recording indicator (turns red \texttt{* REC}
+        when recording).
+\end{itemize}
+
+\section{Tips}
+
+\begin{itemize}
+    \item For webcam work, start with \textbf{Process Scale = 0.5} and
+        \textbf{Detect Every N = 2}.
+    \item The \textbf{Connection Lines} + \textbf{Blob Interior FX} combo is
+        the fastest way to get a striking surveillance / thermal look.
+    \item Save your favourite parameter sets as presets early --- undo is
+        not yet supported.
+    \item Use \textbf{Render to File} for the final deliverable: offline
+        rendering is deterministic and ignores frame drops.
+\end{itemize}
+
+% ============================================================================
+\chapter{Architecture}
+% ============================================================================
+
+BlobTracker is a single-process PyQt6 desktop app with three primary worker
+threads coordinated by Qt signals. This chapter explains \emph{how} the
+pieces talk.
+
+\section{Module Map}
+
+\begin{lstlisting}[basicstyle=\ttfamily\footnotesize]
+blobtracker/
+|-- main.py             <- MainWindow, render timer, menus, status bar, glue
+|-- models.py           <- Blob, FramePacket dataclasses
+|-- input_layer.py      <- FrameSource, VideoFileSource, WebcamSource,
+|                          FrameBuffer (thread-safe queue), CaptureWorker
+|-- processing_core.py  <- Preprocessor, BlobDetector, Tracker, OpticalFlow,
+|                          ProcessorWorker
+|-- effect_engine.py    <- BaseFrameFX, BoundingBoxFX, LabelFX, TrailFX,
+|                          ConnectionLineFX, IntraBlobFX, ZoomInsetFX,
+|                          CreativeFX (chain), Compositor, built-in filters
+|-- output_layer.py     <- PreviewRenderer (QWidget), VideoExporter (writer
+|                          thread), ProjectManager
+|-- renderer.py         <- OfflineRenderer (dedicated full-quality pipeline)
+|-- param_store.py      <- ParamStore singleton, ParamDef, JSON preset I/O
+|-- control_panel.py    <- Docked ControlPanel + SectionBox widgets
+|-- plugin_loader.py    <- PluginLoader - discovery and hot-reload
+|-- preset_browser.py   <- PresetBrowserDialog
+|-- hotkeys.py          <- HotkeyManager
+|-- style.qss           <- Dark theme stylesheet
+|-- plugins/            <- User CreativeFilter plugins (auto-discovered)
+`-- presets/            <- Saved JSON presets
+\end{lstlisting}
+
+\section{Threads}
+
+\begin{tabularx}{\linewidth}{@{}llX@{}}
+    \toprule
+    \textbf{Thread} & \textbf{Owner} & \textbf{Role} \\
+    \midrule
+    Qt main thread       & MainWindow      & UI, preview rendering, status updates \\
+    CaptureWorker        & CaptureWorker   & Pulls frames from the active FrameSource, pushes to FrameBuffer \\
+    ProcessorWorker      & ProcessorWorker & Pulls from FrameBuffer, runs detection/tracking, emits FramePacket \\
+    VideoExporter writer & VideoExporter   & Async disk writes for live recording \\
+    OfflineRenderer      & OfflineRenderer & Independent full-quality file export pipeline \\
+    \bottomrule
+\end{tabularx}
+
+The three worker threads each have a private state machine and only
+communicate with the UI thread via Qt signals --- \textbf{no direct calls
+across threads}.
+
+\section{Frame Pipeline (live preview)}
+
+\begin{lstlisting}[basicstyle=\ttfamily\footnotesize]
+ +------------------+    push    +--------------+   pop     +--------------------+
+ | CaptureWorker    |---------->| FrameBuffer  | --------> | ProcessorWorker    |
+ |  +- VideoFile    |            | (thread-safe |           |  +- Preprocessor   |
+ |  +- Webcam       |            |  queue,      |           |  +- BlobDetector   |
+ +------------------+            |  rate-shaped)|           |  +- Tracker        |
+                                 +--------------+           |  +- OpticalFlow    |
+                                                            +--------+-----------+
+                                                                     | emit
+                                                                     v
+                                                      +--------------------------+
+                                                      | MainWindow.on_frame_     |
+                                                      | packet  (stores latest)  |
+                                                      +--------+-----------------+
+                                                               | render timer
+                                                               v
+                                                      +--------------------------+
+                                                      | render_latest_packet     |
+                                                      |  +- BaseFrameFX          |
+                                                      |  +- IntraBlobFX          |
+                                                      |  +- ConnectionLineFX     |
+                                                      |  +- BBox / Label / Trail |
+                                                      |  +- ZoomInsetFX          |
+                                                      |  +- CreativeFX (chain)   |
+                                                      |  +- Compositor (blend)   |
+                                                      +--------+-----------------+
+                                                               |
+                                                  +------------+------------+
+                                                  v                         v
+                                          PreviewRenderer            VideoExporter
+                                          (QLabel + QPixmap)         (if recording)
+\end{lstlisting}
+
+\textbf{Key design points:}
+
+\begin{itemize}
+    \item \textbf{Backpressure-free preview.} The FrameBuffer drops old
+        frames when the consumer can't keep up.
+    \item \textbf{Decoupled detection rate.} \texttt{detect\_every\_n} and
+        \texttt{process\_scale} let detection run at a coarser cadence than
+        display.
+    \item \textbf{Render timer is the heartbeat.} A QTimer in MainWindow
+        fires at the target FPS and pulls the most recent FramePacket.
+    \item \textbf{Effects are stateless} except TrailFX and IntraBlobFX,
+        whose history lives on the Tracker's blob entries.
+\end{itemize}
+
+\section{Offline Render Pipeline}
+
+\texttt{OfflineRenderer} (\texttt{renderer.py}) is an entirely separate
+pipeline so live preview and export can coexist without interfering.
+
+\begin{enumerate}
+    \item Open the source file with a fresh \texttt{VideoFileSource}.
+    \item For each frame: \texttt{Preprocessor $\rightarrow$ BlobDetector
+        $\rightarrow$ Tracker $\rightarrow$ Effects $\rightarrow$ Compositor}.
+    \item Write the result as a numbered PNG to a temp directory.
+    \item Assemble the PNGs with \texttt{ffmpeg} (preferred) or fall back to
+        OpenCV \texttt{VideoWriter}.
+    \item Emit \texttt{progress}, \texttt{frame\_preview},
+        \texttt{finished} / \texttt{error} signals to MainWindow.
+\end{enumerate}
+
+Output is \textbf{deterministic} for a given source + parameter set,
+regardless of host load.
+
+\section{Parameter System (ParamStore)}
+
+\texttt{ParamStore} is a singleton \texttt{QObject} that holds every
+tunable parameter as a typed \texttt{ParamDef}:
+
+\begin{lstlisting}[language=Python]
+@dataclass
+class ParamDef:
+    key: str
+    value: Any
+    min: Any
+    max: Any
+    step: Any
+    type: str                     # "int" | "float" | "bool" | "enum" |
+                                  # "color" | "str" | "list" | "dict"
+    options: Optional[List[str]]  # for "enum"
+\end{lstlisting}
+
+\begin{itemize}
+    \item \texttt{ParamStore.set(key, value)} casts and clamps the value,
+        then emits \texttt{param\_changed(key, value)}.
+    \item \texttt{ParamStore.apply\_dict(\{...\})} performs a bulk update
+        and emits a single \texttt{params\_bulk\_changed()}.
+    \item \texttt{save\_preset(name)} / \texttt{load\_preset(name)}
+        round-trip the full state through \texttt{presets/<name>.json}.
+\end{itemize}
+
+\section{Signals \& Wiring}
+
+\begin{tabularx}{\linewidth}{@{}lll@{}}
+    \toprule
+    \textbf{Signal} & \textbf{Emitter} & \textbf{Connected to} \\
+    \midrule
+    \texttt{param\_changed}       & ParamStore       & on\_param\_changed \\
+    \texttt{params\_bulk\_changed} & ParamStore      & sync\_all\_from\_store \\
+    \texttt{frame\_packet\_ready} & ProcessorWorker  & on\_frame\_packet \\
+    \texttt{start\_source\_requested} & ControlPanel & transport handler \\
+    \texttt{render\_video\_requested} & ControlPanel & start\_live\_render \\
+    \texttt{offline\_render\_requested} & ControlPanel & start\_offline\_render \\
+    \texttt{progress / frame\_preview / finished / error} & OfflineRenderer & status callbacks \\
+    \texttt{end\_of\_file} & CaptureWorker & on\_end\_of\_file \\
+    \bottomrule
+\end{tabularx}
+
+All signals are routed through \texttt{MainWindow.\_wire\_signals} for easy
+auditing.
+
+\section{Plugin System}
+
+\texttt{PluginLoader} scans \texttt{plugins/*.py}, dynamically imports each
+file with \texttt{importlib.util}, and registers every subclass of
+\texttt{effect\_engine.CreativeFilter} it finds.
+
+\begin{itemize}
+    \item Plugins are stateless from the loader's perspective ---
+        re-running \texttt{load\_plugins()} swaps in fresh classes.
+    \item The \texttt{CreativeFX} chain instantiates filters lazily,
+        passing constructor kwargs from
+        \texttt{creative.filter\_params[<ClassName>]}.
+\end{itemize}
+
+\section{UI Theming}
+
+All styling lives in \texttt{style.qss}:
+
+\begin{itemize}
+    \item \textbf{Base palette:} \texttt{\#0c0e10} background,
+        \texttt{\#101316} panels.
+    \item \textbf{Accent:} \texttt{\#00c8f0} (soft cyan).
+    \item \textbf{Per-section title colours:} assigned via
+        \texttt{\#section\_<name> QGroupBox::title} rules at the bottom of
+        the QSS.
+\end{itemize}
+
+% ============================================================================
+\chapter{Parameter Reference}
+% ============================================================================
+
+Every parameter registered in \texttt{ParamStore.\_register\_defaults()},
+with its type, default, range, and the UI section where it surfaces.
+
+\begin{btnote}
+All values are clamped on \texttt{ParamStore.set} according to the
+\texttt{min}/\texttt{max} columns. Out-of-range writes are silently
+corrected.
+\end{btnote}
+
+\section{Input}
+
+\begin{tabularx}{\linewidth}{@{}lllXl@{}}
+    \toprule
+    \textbf{Key} & \textbf{Type} & \textbf{Default} & \textbf{Range / Options} & \textbf{UI} \\
+    \midrule
+    \texttt{input.source\_type} & enum & \texttt{webcam} & \texttt{webcam}, \texttt{file} & Input \\
+    \texttt{input.source\_path} & str  & ``''  & ---                & Input \\
+    \texttt{input.webcam\_index} & int & 0   & 0--8               & Input \\
+    \texttt{input.target\_fps}  & int  & 30   & 1--120             & Input \\
+    \bottomrule
+\end{tabularx}
+
+\section{Blob Detection}
+
+\begin{tabularx}{\linewidth}{@{}lllXl@{}}
+    \toprule
+    \textbf{Key} & \textbf{Type} & \textbf{Default} & \textbf{Range} & \textbf{UI} \\
+    \midrule
+    \texttt{blob.threshold}   & int   & 90       & 0--255         & Blob \\
+    \texttt{blob.blur\_radius} & int  & 7        & 1--31 (odd)    & Blob \\
+    \texttt{blob.min\_area}   & float & 120.0    & 1--20000       & Blob \\
+    \texttt{blob.max\_area}   & float & 50000.0  & 10--400000     & Blob \\
+    \texttt{blob.max\_count}  & int   & 20       & 1--300         & Blob \\
+    \texttt{blob\_min\_area}  & int   & 80       & 10--5000       & Detection Mode \\
+    \texttt{blob\_max\_area}  & int   & 8000     & 100--50000     & Detection Mode \\
+    \texttt{detector\_mode}   & enum  & contour  & contour, simple\_blob & Detection Mode \\
+    \bottomrule
+\end{tabularx}
+
+\section{Performance}
+
+\begin{tabularx}{\linewidth}{@{}lllXl@{}}
+    \toprule
+    \textbf{Key} & \textbf{Type} & \textbf{Default} & \textbf{Range} & \textbf{UI} \\
+    \midrule
+    \texttt{process\_scale}    & float & 0.5  & 0.25--1.0 & Performance \\
+    \texttt{detect\_every\_n}  & int   & 2    & 1--4      & Performance \\
+    \texttt{min\_label\_area}  & int   & 200  & 0--2000   & Performance \\
+    \bottomrule
+\end{tabularx}
+
+\section{Tracking}
+
+\begin{tabularx}{\linewidth}{@{}lllXl@{}}
+    \toprule
+    \textbf{Key} & \textbf{Type} & \textbf{Default} & \textbf{Range} & \textbf{UI} \\
+    \midrule
+    \texttt{tracking.smoothing}        & float & 0.35 & 0--1         & Blob \\
+    \texttt{tracking.max\_trail\_length}& int  & 35   & 1--500       & Tracking \\
+    \texttt{tracking.id\_font\_size}   & float & 0.5  & 0.2--2.0     & Tracking \\
+    \texttt{tracking.label\_offset\_x} & int   & 10   & $-200$--$200$ & Tracking \\
+    \texttt{tracking.label\_offset\_y} & int   & $-10$ & $-200$--$200$ & Tracking \\
+    \texttt{tracker\_max\_disappeared} & int   & 5    & 1--30        & Detection Mode \\
+    \texttt{tracker\_smooth\_alpha}    & float & 0.4  & 0--1         & Detection Mode \\
+    \texttt{trail\_length}             & int   & 20   & 0--60        & Overlay Style \\
+    \bottomrule
+\end{tabularx}
+
+\section{Effects (Overlays)}
+
+\begin{longtable}{@{}llll@{}}
+    \toprule
+    \textbf{Key} & \textbf{Type} & \textbf{Default} & \textbf{Range / Options} \\
+    \midrule
+    \endhead
+    \texttt{effects.bbox\_enabled}        & bool  & false              & --- \\
+    \texttt{effects.bbox\_color}          & color & [240,240,240]      & RGB \\
+    \texttt{effects.bbox\_thickness}      & int   & 1                  & 1--6 \\
+    \texttt{effects.bbox\_corner\_style}  & enum  & rect               & rect, corner \\
+    \texttt{effects.label\_enabled}       & bool  & false              & --- \\
+    \texttt{effects.label\_color}         & color & [240,240,240]      & RGB \\
+    \texttt{effects.label\_show\_coords}  & bool  & false              & --- \\
+    \texttt{effects.trail\_enabled}       & bool  & false              & --- \\
+    \texttt{effects.trail\_color}         & color & [0,229,255]        & RGB \\
+    \texttt{effects.trail\_alpha}         & float & 0.8                & 0--1 \\
+    \texttt{effects.trail\_thickness}     & int   & 1                  & 1--6 \\
+    \texttt{effects.zoom\_enabled}        & bool  & false              & --- \\
+    \texttt{effects.zoom\_blob\_id}       & int   & 0                  & 0--99999 \\
+    \texttt{effects.zoom\_factor}         & float & 2.0                & 1--6 \\
+    \texttt{effects.zoom\_corner}         & enum  & top-right          & 4 corners \\
+    \texttt{effects.flow\_enabled}        & bool  & false              & --- \\
+    \texttt{effects.blend\_mode}          & enum  & normal             & normal, screen, overlay, multiply \\
+    \bottomrule
+\end{longtable}
+
+\section{Frame FX}
+
+\begin{tabularx}{\linewidth}{@{}lllX@{}}
+    \toprule
+    \textbf{Key} & \textbf{Type} & \textbf{Default} & \textbf{Range} \\
+    \midrule
+    \texttt{frame\_desaturate} & float & 0.0 & 0--1 \\
+    \texttt{frame\_grain}      & float & 0.0 & 0--0.2 \\
+    \texttt{frame\_vignette}   & float & 0.0 & 0--1 \\
+    \bottomrule
+\end{tabularx}
+
+\section{Overlay Style}
+
+\begin{longtable}{@{}llll@{}}
+    \toprule
+    \textbf{Key} & \textbf{Type} & \textbf{Default} & \textbf{Range / Options} \\
+    \midrule
+    \endhead
+    \texttt{overlay\_corner\_style}  & enum & ticks & full, ticks \\
+    \texttt{overlay\_tick\_length}   & int  & 10    & 4--30 \\
+    \texttt{overlay\_box\_opacity}   & float & 0.7  & 0--1 \\
+    \texttt{overlay\_show\_label}    & bool & true  & --- \\
+    \texttt{overlay\_show\_area}     & bool & false & --- \\
+    \texttt{overlay\_show\_coords}   & bool & false & --- \\
+    \texttt{overlay\_show\_leaders}  & bool & true  & --- \\
+    \texttt{overlay\_show\_centroid} & bool & true  & --- \\
+    \texttt{zoom\_inset\_enabled}    & bool & false & --- \\
+    \texttt{zoom\_inset\_scale}      & float & 1.8  & 1--4 \\
+    \bottomrule
+\end{longtable}
+
+\section{Connection Lines}
+
+\begin{tabularx}{\linewidth}{@{}lllX@{}}
+    \toprule
+    \textbf{Key} & \textbf{Type} & \textbf{Default} & \textbf{Range} \\
+    \midrule
+    \texttt{connection\_enabled}     & bool  & true        & --- \\
+    \texttt{connection\_max\_dist}   & float & 200.0       & 50--800 \\
+    \texttt{connection\_opacity}     & float & 0.4         & 0--1 \\
+    \texttt{connection\_thickness}   & float & 0.5         & 0.5--3.0 \\
+    \texttt{connection\_color}       & color & [255,255,255] & RGB \\
+    \texttt{connection\_show\_dots}  & bool  & true        & --- \\
+    \texttt{connection\_dot\_radius} & int   & 3           & 1--8 \\
+    \bottomrule
+\end{tabularx}
+
+\section{Blob Interior FX}
+
+\begin{longtable}{@{}llll@{}}
+    \toprule
+    \textbf{Key} & \textbf{Type} & \textbf{Default} & \textbf{Range / Options} \\
+    \midrule
+    \endhead
+    \texttt{intra\_blob\_enabled}      & bool  & false  & --- \\
+    \texttt{intra\_blob\_mode}         & enum  & thermal & none, thermal, edge, pixelate, negative, blur, highlight, desaturate \\
+    \texttt{intra\_blob\_opacity}      & float & 1.0    & 0--1 \\
+    \texttt{intra\_blob\_padding}      & int   & 8      & 0--60 \\
+    \texttt{intra\_blob\_feather}      & bool  & true   & --- \\
+    \texttt{intra\_blob\_pixel\_size}  & int   & 12     & 2--40 \\
+    \texttt{intra\_blob\_blur\_radius} & int   & 21     & 3--61 (odd) \\
+    \texttt{intra\_blob\_highlight}    & float & 1.4    & 1--3 \\
+    \bottomrule
+\end{longtable}
+
+\section{Creative Filter Chain}
+
+\begin{tabularx}{\linewidth}{@{}lllX@{}}
+    \toprule
+    \textbf{Key} & \textbf{Type} & \textbf{Default} & \textbf{Notes} \\
+    \midrule
+    \texttt{creative.enabled}        & bool      & false & Master toggle \\
+    \texttt{creative.filter\_order}  & list[str] & []    & Filter class names \\
+    \texttt{creative.filter\_params} & dict      & see below & Per-filter kwargs \\
+    \bottomrule
+\end{tabularx}
+
+\subsection{Per-filter Enable + Parameter Keys}
+
+\begin{tabularx}{\linewidth}{@{}llX@{}}
+    \toprule
+    \textbf{Filter} & \textbf{Enable key} & \textbf{Parameter keys} \\
+    \midrule
+    Grain                & \texttt{fx\_grain\_enabled}   & \texttt{creative.grain\_intensity}, \texttt{creative.grain\_type}, \texttt{creative.grain\_colored} \\
+    Glitch               & \texttt{fx\_glitch\_enabled}  & \texttt{creative.glitch\_slices}, \texttt{creative.glitch\_offset}, \texttt{creative.glitch\_probability} \\
+    Thermal              & \texttt{fx\_thermal\_enabled} & \texttt{creative.thermal\_colormap} \\
+    Edge                 & \texttt{fx\_edge\_enabled}    & \texttt{creative.edge\_low\_threshold}, \texttt{creative.edge\_high\_threshold}, \texttt{creative.edge\_alpha}, \texttt{creative.edge\_blur} \\
+    Chromatic Aberration & \texttt{fx\_chroma\_enabled}  & \texttt{creative.chroma\_shift\_x}, \texttt{creative.chroma\_shift\_y}, \texttt{creative.chroma\_randomize} \\
+    \bottomrule
+\end{tabularx}
+
+\subsection{Default \texttt{creative.filter\_params} dict}
+
+\begin{lstlisting}[language=json]
+{
+  "GrainFilter":         { "intensity": 0.08, "grain_type": "gaussian", "colored": false },
+  "GlitchFilter":        { "slices": 8, "max_offset": 24, "probability": 0.5 },
+  "ThermalFilter":       { "colormap": "inferno" },
+  "EdgeFilter":          { "low": 80, "high": 180, "alpha": 0.7, "blur": 0 },
+  "ChromaticAberration": { "shift_x": 3, "shift_y": 0, "randomize": false }
+}
+\end{lstlisting}
+
+\section{Output}
+
+\begin{tabularx}{\linewidth}{@{}lllX@{}}
+    \toprule
+    \textbf{Key} & \textbf{Type} & \textbf{Default} & \textbf{Range / Options} \\
+    \midrule
+    \texttt{output.export\_path} & str  & output.mp4 & --- \\
+    \texttt{output.format}       & enum & mp4        & mp4, png\_seq, prores \\
+    \texttt{output.recording}    & bool & false      & --- \\
+    \bottomrule
+\end{tabularx}
+
+\section{Notes on Legacy / Aliased Keys}
+
+A handful of fields appear twice under different names (e.g.\
+\texttt{tracking.smoothing} $\leftrightarrow$
+\texttt{tracker\_smooth\_alpha}, \texttt{tracking.max\_trail\_length}
+$\leftrightarrow$ \texttt{trail\_length}, \texttt{effects.bbox\_corner\_style}
+$\leftrightarrow$ \texttt{overlay\_corner\_style}). The UI mirrors writes
+between them so older presets keep working.
+
+% ============================================================================
+\chapter{Development Guide}
+% ============================================================================
+
+Everything you need to hack on BlobTracker: dev setup, conventions, plugin
+authoring, preset format, and pointers for common extensions.
+
+\section{Dev Setup}
+
+\begin{lstlisting}[language=bash]
+# clone, then:
+cd blobtracker
+python -m venv .venv
+.venv\Scripts\activate            # Windows
+pip install -r requirements.txt
+python main.py
+\end{lstlisting}
+
+Recommended tooling:
+
+\begin{itemize}
+    \item \textbf{Python 3.10+} (the codebase declares 3.8 minimum, but
+        PyQt6 + modern type hints work best on 3.10+).
+    \item \textbf{ruff} for linting (no config bundled; project follows
+        PEP 8).
+    \item \textbf{mypy} for optional typing --- most modules use
+        \texttt{from \_\_future\_\_ import annotations} and PEP 604 unions.
+\end{itemize}
+
+\subsection{Optional: ffmpeg}
+
+Required only for the \texttt{prores} output format and as the preferred
+encoder for \texttt{OfflineRenderer}. If \texttt{ffmpeg} is not on PATH, the
+offline renderer falls back to OpenCV's \texttt{VideoWriter}.
+
+\section{Repo Conventions}
+
+\begin{itemize}
+    \item \textbf{No global state outside ParamStore.} Treat every tunable
+        as a parameter and register it in
+        \texttt{ParamStore.\_register\_defaults()}.
+    \item \textbf{Effects are stateless functions.} If you need history,
+        store it on the \texttt{Blob} dataclass via the \texttt{Tracker},
+        not on the effect.
+    \item \textbf{Threading discipline.} All inter-thread communication
+        goes through Qt signals. Never call UI methods from worker threads.
+    \item \textbf{Imports.} Use absolute imports within the
+        \texttt{blobtracker/} package.
+    \item \textbf{Type-cast at the boundary.} When reading values, convert
+        with \texttt{int()/float()/bool()} at the read site.
+\end{itemize}
+
+\subsection{File-layout Cheat-sheet}
+
+\begin{tabularx}{\linewidth}{@{}lX@{}}
+    \toprule
+    \textbf{Want to change\ldots} & \textbf{Edit\ldots} \\
+    \midrule
+    Detection algorithm           & \texttt{processing\_core.BlobDetector} \\
+    Tracking algorithm            & \texttt{processing\_core.Tracker} \\
+    An overlay effect             & \texttt{effect\_engine.<EffectName>} \\
+    A new built-in creative filter & \texttt{effect\_engine.*Filter} + register in \texttt{CreativeFX} \\
+    UI layout / a new section     & \texttt{control\_panel.\_build\_<section>\_section} \\
+    A new parameter               & \texttt{param\_store.\_register\_defaults} \\
+    Theme                         & \texttt{style.qss} \\
+    Offline render order          & \texttt{renderer.OfflineRenderer.\_render\_frame} \\
+    \bottomrule
+\end{tabularx}
+
+\section{Writing a Plugin (Creative Filter)}
+
+Plugins are auto-discovered from \texttt{plugins/*.py}. They must subclass
+\texttt{CreativeFilter} from \texttt{effect\_engine}.
+
+\subsection{Minimal Example}
+
+\begin{lstlisting}[language=Python]
+# plugins/my_filter.py
+from __future__ import annotations
+import cv2
+import numpy as np
+from effect_engine import CreativeFilter
+
+
+class VignettePulseFilter(CreativeFilter):
+    name = "VignettePulseFilter"
+
+    def __init__(self, strength: float = 0.5, falloff: float = 1.5) -> None:
+        self.strength = float(strength)
+        self.falloff = float(falloff)
+
+    def apply(self, frame: np.ndarray) -> np.ndarray:
+        h, w = frame.shape[:2]
+        y, x = np.indices((h, w), dtype=np.float32)
+        cx, cy = w / 2.0, h / 2.0
+        d = np.sqrt((x - cx) ** 2 + (y - cy) ** 2)
+        mask = 1.0 - self.strength * (d / d.max()) ** self.falloff
+        mask = np.clip(mask, 0.0, 1.0)[..., None]
+        return (frame.astype(np.float32) * mask).astype(np.uint8)
+\end{lstlisting}
+
+\subsection{Required Contract}
+
+\begin{tabularx}{\linewidth}{@{}llX@{}}
+    \toprule
+    \textbf{Member} & \textbf{Type} & \textbf{Notes} \\
+    \midrule
+    \texttt{name}   & str class attribute & Identity in \texttt{creative.filter\_order} and \texttt{creative.filter\_params} \\
+    \texttt{\_\_init\_\_(**kwargs)} & constructor & All kwargs must have sensible defaults \\
+    \texttt{apply(frame)} & method & BGR uint8 in/out, same shape \\
+    \bottomrule
+\end{tabularx}
+
+\subsection{Wiring Constructor kwargs from the UI}
+
+\begin{lstlisting}[language=json]
+"creative.filter_params": {
+  "VignettePulseFilter": { "strength": 0.55, "falloff": 1.8 }
+}
+\end{lstlisting}
+
+The \texttt{CreativeFX} chain reads this dict when instantiating the
+filter. Missing keys fall back to constructor defaults.
+
+\subsection{Hot Reload}
+
+After dropping a new file into \texttt{plugins/}, click \textbf{Hot Reload
+Plugins} in the Creative section (or \textit{Effects $\rightarrow$ Hot
+Reload Plugins} in the menu). No app restart needed.
+
+\begin{btnote}
+The old class objects are not unloaded from \texttt{sys.modules} --- they
+are shadowed by the new ones. If you observe stale behaviour after a
+reload, restart the app.
+\end{btnote}
+
+\subsection{Where Filters Run in the Pipeline}
+
+Creative filters run \textbf{after} all overlay effects and \textbf{after}
+the \texttt{Compositor} blend mode is applied. They see the final
+composited frame just before it reaches the preview / exporter. The order
+of execution within the chain is exactly the order shown in the
+\textbf{Filter Chain (drag to reorder)} list.
+
+\section{Preset Format}
+
+Presets live in \texttt{presets/<name>.json}:
+
+\begin{lstlisting}[language=json]
+{
+  "name": "surveillance",
+  "params": {
+    "input.source_type": "file",
+    "blob.threshold": 110,
+    "effects.bbox_enabled": true,
+    "effects.bbox_color": [0, 229, 255],
+    "creative.enabled": true,
+    "creative.filter_order": ["EdgeFilter", "GrainFilter"],
+    "creative.filter_params": {
+      "EdgeFilter": { "low": 60, "high": 160, "alpha": 0.6, "blur": 0 }
+    }
+  },
+  "meta": { "version": 1 }
+}
+\end{lstlisting}
+
+\begin{itemize}
+    \item Missing keys fall back to whatever is currently registered ---
+        partial presets are valid.
+    \item Unknown keys are silently ignored --- old presets stay
+        forward-compatible.
+    \item Colours are \texttt{[R, G, B]} with 0--255 ints.
+\end{itemize}
+
+\section{Adding a New Parameter}
+
+\begin{enumerate}
+    \item Add a \texttt{ParamDef(...)} row to
+        \texttt{\_register\_defaults()} with the right \texttt{type},
+        \texttt{min}, \texttt{max}, \texttt{step}, and \texttt{options}
+        (enums).
+    \item Create a Qt control in the appropriate
+        \texttt{\_build\_*\_section} method and bind it with one of:
+        \texttt{\_bind\_spin}, \texttt{\_bind\_slider},
+        \texttt{\_bind\_checkbox}, \texttt{\_bind\_combo}, or
+        \texttt{\_make\_color\_button}.
+    \item Add an entry to \texttt{ControlPanel.sync\_all\_from\_store} so
+        presets re-sync the widget on load.
+    \item Read the value in your effect via
+        \texttt{param\_store.get("your.key")}.
+    \item Update the Parameter Reference chapter.
+\end{enumerate}
+
+\section{Adding a New Overlay Effect}
+
+\begin{enumerate}
+    \item Create a class in \texttt{effect\_engine.py}:
+\begin{lstlisting}[language=Python]
+class MyOverlayFX:
+    def apply(self, frame, blobs):
+        # mutate or return a copy
+        return frame
+\end{lstlisting}
+    \item Instantiate it in \texttt{MainWindow.\_\_init\_\_} and wire it
+        into \texttt{render\_latest\_packet} between the existing overlay
+        calls.
+    \item (If it's expensive) add an \texttt{enabled} parameter so users
+        can toggle it.
+    \item Also wire it into \texttt{OfflineRenderer} if you want it in
+        offline renders.
+\end{enumerate}
+
+\section{Style / Theme}
+
+All visual styling is in \texttt{style.qss}, loaded by
+\texttt{MainWindow.\_load\_stylesheet} at startup.
+
+\begin{itemize}
+    \item The accent colour is \texttt{\#00c8f0} --- search and replace to
+        re-skin.
+    \item Per-section title colours live at the bottom under
+        \texttt{\#section\_<name>} rules.
+    \item Avoid inline \texttt{setStyleSheet()} in Python; prefer adding a
+        rule to \texttt{style.qss} and tagging the widget with
+        \texttt{setObjectName(...)}.
+\end{itemize}
+
+\section{Testing \& Debugging}
+
+\begin{itemize}
+    \item \textbf{Disable detection} to isolate a UI bug: set
+        \texttt{blob.max\_count} to \texttt{0} or toggle off every effect.
+    \item \textbf{Force a slower frame rate} with
+        \texttt{input.target\_fps = 5} to see overlays draw step-by-step.
+    \item \textbf{Check threading} by adding
+        \texttt{QThread.currentThread().objectName()} traces --- cross-thread
+        UI writes throw at runtime under PyQt6.
+\end{itemize}
+
+% ============================================================================
+\chapter{Troubleshooting}
+% ============================================================================
+
+Common issues and fixes, in roughly the order users hit them.
+
+\section{Launch}
+
+\subsection{ModuleNotFoundError: No module named 'PyQt6'}
+
+You're using the wrong Python interpreter. Activate the virtualenv and
+re-install:
+
+\begin{lstlisting}[language=bash]
+.venv\Scripts\activate
+pip install -r requirements.txt
+\end{lstlisting}
+
+\subsection{Could not find the Qt platform plugin "windows"}
+
+Reinstall the PyQt6 binary wheels (don't trust system-installed Qt):
+
+\begin{lstlisting}[language=bash]
+pip install --force-reinstall --no-cache-dir PyQt6 PyQt6-Qt6 PyQt6-sip
+\end{lstlisting}
+
+\subsection{Black Window or Instant Crash}
+
+Update graphics drivers and try \texttt{QT\_OPENGL=software} in the
+environment. On laptops with hybrid graphics, force the app to use the
+discrete GPU.
+
+\section{Source / Capture}
+
+\subsection{Webcam Not Opening}
+
+\begin{itemize}
+    \item Check \textbf{Webcam Index} --- the OS-assigned index is rarely
+        \texttt{0} on multi-camera setups. Try \texttt{1}, \texttt{2}, etc.
+    \item Close anything else using the camera (Teams, browser).
+    \item On Windows, allow desktop apps in \emph{Privacy $\rightarrow$
+        Camera}.
+\end{itemize}
+
+\subsection{Video File Doesn't Open}
+
+\begin{itemize}
+    \item Confirm the file plays in VLC. If VLC can play it but BlobTracker
+        can't, re-encode to H.264 MP4:
+\begin{lstlisting}[language=bash]
+ffmpeg -i in.mov -c:v libx264 -crf 18 out.mp4
+\end{lstlisting}
+    \item OpenCV's bundled codecs are limited --- exotic formats (HEVC
+        variants, ProRes, RAW DNG sequences) often fail without a system
+        codec.
+\end{itemize}
+
+\subsection{Image Sequence Not Advancing}
+
+The \texttt{VideoFileSource} treats single PNGs as one-frame inputs. For a
+numbered sequence, point at the first file (\texttt{frame\_0001.png}) ---
+OpenCV picks up the pattern automatically.
+
+\section{Detection / Tracking}
+
+\subsection{Nothing Is Detected}
+
+\begin{itemize}
+    \item Watch the \textbf{Threshold} slider --- if the scene is bright on
+        bright (or dark on dark), the binarisation produces no contours.
+    \item Increase \textbf{Blur Radius} to merge speckle.
+    \item Check \textbf{Min Area} --- small blobs may be filtered out.
+    \item Try \textbf{Detector Mode $\rightarrow$ Simple Blob}.
+\end{itemize}
+
+\subsection{Blob IDs Flicker / Re-assign on Every Frame}
+
+\begin{itemize}
+    \item Increase \textbf{Disappeared Frames} to keep IDs alive across
+        short occlusions.
+    \item Reduce \textbf{Centroid Smoothing Alpha} if smoothing is making
+        the assignment confused.
+    \item Drop \textbf{Detect Every N} to \texttt{1} --- skipping detection
+        combined with fast motion can break ID continuity.
+\end{itemize}
+
+\subsection{Tracker Is Laggy / Sluggish}
+
+That's smoothing. Reduce \texttt{tracking.smoothing} toward \texttt{0.1}.
+
+\section{Performance}
+
+\subsection{Low FPS}
+
+\begin{enumerate}
+    \item Lower \textbf{Process Scale} to \texttt{0.5} (Performance section).
+    \item Set \textbf{Detect Every N} to \texttt{2} or \texttt{3}.
+    \item Turn off \textbf{Optical Flow} --- the most expensive overlay.
+    \item Disable the \textbf{Creative} chain when iterating on detection.
+    \item Reduce \textbf{Max Blob Count} if the scene is crowded.
+\end{enumerate}
+
+\subsection{CPU Spikes When Recording}
+
+For high-res recordings, prefer \textbf{Render to File} (offline mode)
+which is throughput-optimised and not bound to live FPS.
+
+\section{Recording / Export}
+
+\subsection{Recorded File Is Empty / 0 Bytes}
+
+\begin{itemize}
+    \item Set the \textbf{Export Path} before pressing Start Record.
+    \item Make sure the source is actually playing.
+    \item Codec mismatch: try \texttt{png\_seq} first, then switch to
+        \texttt{mp4}.
+\end{itemize}
+
+\subsection{\texttt{prores} Produces Nothing}
+
+The \texttt{prores} format shells out to \texttt{ffmpeg}. Confirm:
+
+\begin{lstlisting}[language=bash]
+ffmpeg -version
+\end{lstlisting}
+
+If \texttt{ffmpeg} isn't on PATH, install it and restart the app (PATH is
+read at process start).
+
+\subsection{Offline Render Says ``ffmpeg not found, falling back to OpenCV''}
+
+Informational, not an error --- output is still written via OpenCV
+\texttt{VideoWriter} with a more limited codec set. Install \texttt{ffmpeg}
+for best results.
+
+\section{UI}
+
+\begin{itemize}
+    \item \textbf{Control panel cut off?} Resize the dock wider (drag the
+        right edge) or undock it.
+    \item \textbf{Section won't expand?} The checkbox in each section title
+        is the expand/collapse toggle.
+    \item \textbf{Colour swatch wrong?} Save and reload the preset --- this
+        resyncs the UI from \texttt{ParamStore}.
+\end{itemize}
+
+\section{Plugins}
+
+\subsection{My Plugin Isn't Showing Up}
+
+\begin{itemize}
+    \item File must be in \texttt{plugins/} and end with \texttt{.py}.
+    \item File name must not start with \texttt{\_}.
+    \item Class must inherit from \texttt{effect\_engine.CreativeFilter}
+        and define a \texttt{name} class attribute.
+    \item Click \textbf{Hot Reload Plugins} after editing.
+    \item Check the console --- import errors print but don't crash the app.
+\end{itemize}
+
+\subsection{Plugin Loads but Parameters Are Ignored}
+
+Constructor kwargs come from
+\texttt{creative.filter\_params["<ClassName>"]}. Add an entry there in a
+preset, or rely on the constructor defaults.
+
+\section{Presets}
+
+\begin{itemize}
+    \item Must end with \texttt{.json}.
+    \item Must live directly under \texttt{presets/} (no nesting).
+    \item Restart the app or click \textbf{Save} on a dummy preset to
+        refresh the list.
+    \item Loading an old preset with unknown keys is a warning, not a
+        failure --- re-save under the same name to migrate.
+\end{itemize}
+
+\section{Still Stuck?}
+
+Open an issue with:
+
+\begin{enumerate}
+    \item OS and Python version (\texttt{python --version}).
+    \item \texttt{pip freeze} output.
+    \item The exact preset and source file (or ``webcam'').
+    \item Steps to reproduce.
+    \item A screenshot or short screen recording for UI bugs.
+\end{enumerate}
+
+% ============================================================================
+\chapter*{Colophon}
+\addcontentsline{toc}{chapter}{Colophon}
+% ============================================================================
+
+This document was assembled from the BlobTracker documentation suite
+(\texttt{docs/README.md}, \texttt{USER\_GUIDE.md}, \texttt{ARCHITECTURE.md},
+\texttt{PARAMETERS.md}, \texttt{DEVELOPMENT.md}, \texttt{TROUBLESHOOTING.md})
+and the project \texttt{README.md}.
+
+\bigskip
+
+\noindent\textsf{\textbf{Authors:} Hachim Boubdillah and Baqua Abdellah.}
+
+\bigskip
+
+\noindent\textsf{\textbf{Stack:} Python \textbullet{} PyQt6 \textbullet{}
+OpenCV \textbullet{} NumPy \textbullet{} SciPy \textbullet{} Pillow.}
+
+\bigskip
+
+\noindent\textsf{\textbf{Typeset with} \LaTeX{} using the \texttt{report}
+class, the \texttt{tcolorbox} package for callouts, and the
+\texttt{listings} package for code samples. The accent colour matches the
+application's signature cyan, \texttt{\#00C8F0}.}
+
+% ============================================================================
+\end{document}
+% ============================================================================

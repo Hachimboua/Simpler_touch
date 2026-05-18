@@ -18,11 +18,14 @@ from PyQt6.QtWidgets import (
     QMessageBox,
     QPushButton,
     QSlider,
+    QToolBar,
     QVBoxLayout,
     QWidget,
 )
 
+from chatbot import ChatbotDock
 from control_panel import ControlPanel
+from env_loader import load_dotenv
 from effect_engine import (
     BaseFrameFX,
     BoundingBoxFX,
@@ -119,6 +122,13 @@ class MainWindow(QMainWindow):
 
         self.control_panel = ControlPanel(self.param_store, self)
         self.addDockWidget(Qt.DockWidgetArea.LeftDockWidgetArea, self.control_panel)
+
+        self.chatbot = ChatbotDock(self)
+        self.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, self.chatbot)
+        self.chatbot.setMinimumWidth(320)
+        self.chatbot.show()
+
+        self._build_assistant_toolbar()
 
         self.frame_buffer = FrameBuffer(max_size=12, target_fps=float(self.param_store.get("input.target_fps")))
         self.capture_worker = CaptureWorker(self.frame_buffer)
@@ -252,6 +262,10 @@ class MainWindow(QMainWindow):
         reload_plugins_action = QAction("Hot Reload Plugins", self)
         reload_plugins_action.triggered.connect(self._load_plugins)
         effects_menu.addAction(reload_plugins_action)
+
+        toggle_chatbot_action = QAction("Toggle Assistant", self)
+        toggle_chatbot_action.triggered.connect(self._toggle_chatbot)
+        help_menu.addAction(toggle_chatbot_action)
 
         about_action = QAction("About", self)
         about_action.triggered.connect(self.show_about)
@@ -1060,6 +1074,29 @@ class MainWindow(QMainWindow):
     def toggle_play_pause(self) -> None:
         self._on_play_pause()
 
+    def _build_assistant_toolbar(self) -> None:
+        toolbar = QToolBar("Assistant", self)
+        toolbar.setObjectName("assistant_toolbar")
+        toolbar.setMovable(False)
+        self.addToolBar(Qt.ToolBarArea.TopToolBarArea, toolbar)
+
+        self._assistant_action = QAction("💬 Assistant", self)
+        self._assistant_action.setCheckable(True)
+        self._assistant_action.setChecked(True)
+        self._assistant_action.setToolTip("Show/hide the AI assistant (Mistral)")
+        self._assistant_action.triggered.connect(self._set_chatbot_visible)
+        toolbar.addAction(self._assistant_action)
+
+        self.chatbot.visibilityChanged.connect(self._assistant_action.setChecked)
+
+    def _set_chatbot_visible(self, visible: bool) -> None:
+        self.chatbot.setVisible(bool(visible))
+        if visible:
+            self.chatbot.raise_()
+
+    def _toggle_chatbot(self) -> None:
+        self._set_chatbot_visible(not self.chatbot.isVisible())
+
     def toggle_fullscreen(self) -> None:
         if self.isFullScreen():
             self.showNormal()
@@ -1093,8 +1130,10 @@ class MainWindow(QMainWindow):
 
 
 def main() -> None:
-    app = QApplication(sys.argv)
     app_dir = os.path.dirname(os.path.abspath(__file__))
+    load_dotenv(os.path.join(os.path.dirname(app_dir), ".env"))
+    load_dotenv(os.path.join(app_dir, ".env"))
+    app = QApplication(sys.argv)
     window = MainWindow(app_dir=app_dir)
     window.show()
     sys.exit(app.exec())
